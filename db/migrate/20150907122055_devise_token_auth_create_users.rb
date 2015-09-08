@@ -9,8 +9,8 @@ class DeviseTokenAuthCreateUsers < ActiveRecord::Migration
 
       t.datetime :remember_created_at
 
-      t.string :name
-      t.string :image
+      t.string :first_name
+      t.string :last_name
       t.string :email
 
       t.json :tokens

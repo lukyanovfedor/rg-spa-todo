@@ -1,0 +1,46 @@
+<div style="width: 300px">
+    <form ng-submit="authCtrl.register()" role="form">
+        <div class="form-group">
+            <label>first name</label>
+            <input type="text" name="first_name" ng-model="authCtrl.registerData.first_name" required="required" class="form-control"/>
+        </div>
+
+        <div class="form-group">
+            <label>last name</label>
+            <input type="text" name="last_name" ng-model="authCtrl.registerData.last_name" required="required" class="form-control"/>
+        </div>
+
+        <div class="form-group">
+            <label>email</label>
+            <input type="email" name="email" ng-model="authCtrl.registerData.email" required="required" class="form-control"/>
+        </div>
+
+        <div class="form-group">
+            <label>password</label>
+            <input type="password" name="password" ng-model="authCtrl.registerData.password" required="required" class="form-control"/>
+        </div>
+
+        <div class="form-group">
+            <label>password confirmation</label>
+            <input type="password" name="password_confirmation" ng-model="authCtrl.registerData.password_confirmation" required="required" class="form-control"/>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-lg">Register</button>
+    </form>
+</div>
+
+<div style="width: 300px">
+    <form ng-submit="submitLogin(loginForm)" role="form" ng-init="loginForm = {}">
+        <div class="form-group">
+            <label>email</label>
+            <input type="email" name="email" ng-model="loginForm.email" required="required" class="form-control"/>
+        </div>
+
+        <div class="form-group">
+            <label>password</label>
+            <input type="password" name="password" ng-model="loginForm.password" required="required" class="form-control"/>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-lg">Sign in</button>
+    </form>
+</div>

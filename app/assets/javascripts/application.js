@@ -4,4 +4,12 @@
 // It's not advisable to add code directly here, but if you do, it'll appear at the bottom of the
 // the compiled file.
 //= require angular
+//= require angular-ui-router
+//= require angular-ui-bootstrap
+//= require angular-token-auth
+//= require angular-cookie
+//= require angular-rails-templates
+//= require angular-ngprogress
+//= require_tree ./templates
+//= require todo_app.coffee
 //= require_tree .

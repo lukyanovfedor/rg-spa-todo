@@ -21,8 +21,8 @@ ActiveRecord::Schema.define(version: 20150907122055) do
     t.string   "uid",                 default: "",      null: false
     t.string   "encrypted_password",  default: "",      null: false
     t.datetime "remember_created_at"
-    t.string   "name"
-    t.string   "image"
+    t.string   "first_name"
+    t.string   "last_name"
     t.string   "email"
     t.json     "tokens"
     t.datetime "created_at"

@@ -5,3 +5,29 @@
   To use Glyphicons sprites instead of Font Awesome, replace with "require twitter-bootstrap-static/sprites"
   =require twitter-bootstrap-static/fontawesome
   */
+
+body { padding-top: 70px; }
+
+#ngProgress {
+    margin: 0;
+    padding: 0;
+    z-index: 99998;
+    background-color: green;
+    color: green;
+    box-shadow: 0 0 10px 0;
+    height: 2px;
+    opacity: 0;
+    -webkit-transition: all 0.5s ease-in-out;
+    -moz-transition: all 0.5s ease-in-out;
+    -o-transition: all 0.5s ease-in-out;
+    transition: all 0.5s ease-in-out;
+}
+#ngProgress-container {
+    position: fixed;
+    margin: 0;
+    padding: 0;
+    top: 51px;
+    left: 0;
+    right: 0;
+    z-index: 99999;
+}
