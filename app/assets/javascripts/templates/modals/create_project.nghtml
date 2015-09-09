@@ -1,0 +1,22 @@
+<div class="modal-header">
+    <h3 class="modal-title">
+        Create project
+    </h3>
+</div>
+
+<div class="modal-body">
+    <form role="form" name="pmc.projectNew" novalidate>
+        <div class="form-group">
+            <label>Project title</label>
+            <input type="text" name="title" ng-model="pmc.project.title" required="required" class="form-control"/>
+            <p ng-show="pmc.projectNew.title.$invalid && !pmc.projectNew.title.$pristine" class="help-block">
+                Title is required.
+            </p>
+        </div>
+    </form>
+</div>
+
+<div class="modal-footer">
+    <button class="btn btn-primary" type="button" ng-click="pmc.create()" ng-disabled="pmc.projectNew.$invalid">Create</button>
+    <button class="btn btn-warning" type="button" ng-click="pmc.cancel()">Cancel</button>
+</div>

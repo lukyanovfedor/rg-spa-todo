@@ -10,6 +10,7 @@
 //= require angular-cookie
 //= require angular-rails-templates
 //= require angular-ngprogress
+//= require angular-resource
 //= require_tree ./templates
 //= require todo_app.coffee
 //= require_tree .

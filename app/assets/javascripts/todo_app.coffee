@@ -4,7 +4,8 @@ angular
     'ui.bootstrap',
     'ng-token-auth',
     'templates',
-    'ngProgress'
+    'ngProgress',
+    'ngResource'
   ])
   .config(['$stateProvider', ($stateProvider) ->
     $stateProvider
@@ -42,4 +43,5 @@ angular
   ])
   .config(['$httpProvider', ($httpProvider) ->
     $httpProvider.interceptors.unshift('ProgressInterceptorFactory')
+    $httpProvider.interceptors.push('CsrfInterceptorFactory')
   ])

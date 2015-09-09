@@ -1,8 +1,5 @@
 /*
   =require twitter-bootstrap-static/bootstrap
-
-  Use Font Awesome icons (default)
-  To use Glyphicons sprites instead of Font Awesome, replace with "require twitter-bootstrap-static/sprites"
   =require twitter-bootstrap-static/fontawesome
   */
 
@@ -11,7 +8,7 @@ body { padding-top: 70px; }
 #ngProgress {
     margin: 0;
     padding: 0;
-    z-index: 99998;
+    z-index: 1000;
     background-color: green;
     color: green;
     box-shadow: 0 0 10px 0;
@@ -29,5 +26,5 @@ body { padding-top: 70px; }
     top: 51px;
     left: 0;
     right: 0;
-    z-index: 99999;
+    z-index: 1000;
 }
