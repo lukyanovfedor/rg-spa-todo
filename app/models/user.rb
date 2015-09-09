@@ -6,4 +6,6 @@ class User < ActiveRecord::Base
 
   has_many :projects, dependent: :destroy
 
+  mount_uploader :image, UserImageUploader
+
 end

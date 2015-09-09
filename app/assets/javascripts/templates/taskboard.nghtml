@@ -5,10 +5,10 @@
                 <a class="navbar-brand" ui-sref="taskboard.projects">Todo</a>
             </div>
 
-            <div class="navbar-left" ng-if="headerCtrl.user.signedIn">
+            <div class="navbar-right" ng-if="headerCtrl.user.signedIn">
                 <div dropdown is-open="headerCtrl.isMenuOpen">
                     <div class="avatar" dropdown-toggle>
-                        {{ headerCtrl.user.first_name }} {{ headerCtrl.user.last_name }}
+                        <img src="{{ headerCtrl.user.image.url }}">
                     </div>
 
                     <ul class="dropdown-menu dropdown-menu-right" role="menu">

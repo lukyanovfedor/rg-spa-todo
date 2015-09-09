@@ -28,3 +28,18 @@ body { padding-top: 70px; }
     right: 0;
     z-index: 1000;
 }
+
+.avatar {
+    cursor: pointer;
+    position: relative;
+    top: 3px;
+    height: 44px;
+    width: 44px;
+    border-radius: 100%;
+    overflow: hidden;
+    border: 2px solid #3FA5F7;
+}
+
+a {
+    cursor: pointer;
+}
