@@ -13,6 +13,12 @@
 
                     <ul class="dropdown-menu dropdown-menu-right" role="menu">
                         <li>
+                            <a ui-sref="taskboard.projects">
+                                My projects
+                            </a>
+                        </li>
+                        <li role="presentation" class="divider"></li>
+                        <li>
                             <a ng-click="headerCtrl.create_project()">
                                 Create new project
                             </a>

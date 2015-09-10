@@ -1,0 +1,45 @@
+.auth-forms {
+  max-width: 330px;
+  margin: 40px auto 0;
+
+  .brand {
+    color: #777;
+    font-size: 42px;
+    text-align: center;
+    margin: 0 0 20px;
+  }
+
+  .login-form {
+    margin: 0 0 30px;
+  }
+
+  .register-form {
+    margin: 0 0 60px;
+  }
+
+  .or {
+    text-align: center;
+    margin: 0 0 30px;
+    font-size: 26px;
+    color: #777;
+    position: relative;
+
+    &:before {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 20px;
+      height: 1px;
+      background: #777;
+    }
+
+
+    span {
+      position: relative;
+      background: #f1f1f1;
+      z-index: 10;
+      padding: 0 8px;
+    }
+  }
+}

@@ -1,5 +1,7 @@
 class ApplicationController
-  constructor: ($rootScope, $scope, $auth, $state) ->
+  constructor: (Template, $rootScope, $scope, $auth, $state) ->
+    @Template = Template
+
     goToAuth = () ->
       $state.go('auth')
 
@@ -20,6 +22,7 @@ class ApplicationController
 angular
   .module('TodoApp')
   .controller('ApplicationController', [
+    'Template',
     '$rootScope',
     '$scope',
     '$auth',

@@ -1,10 +1,9 @@
 class ProjectsController
   constructor: (ProjectResource, $scope) ->
-    @projects = ProjectResource.list()
+    @projects = ProjectResource.query()
 
-    $scope.$on('projects:new_project', (ev, project) =>
-      @projects.push(project)
-    )
+    @projectDestroyCallback = (project) =>
+      @projects = @projects.filter((p) -> !!p.id)
 
 angular
   .module('TodoApp')

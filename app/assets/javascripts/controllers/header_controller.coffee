@@ -1,5 +1,5 @@
 class HeaderController
-  constructor: ($auth, $rootScope, $modal) ->
+  constructor: ($auth, $rootScope, $modal, $state) ->
     @user = $rootScope.user || {}
     @signOut = $auth.signOut.bind($auth)
     @isMenuOpen = false
@@ -13,9 +13,7 @@ class HeaderController
 
       modal
         .result
-        .then((project) ->
-          $rootScope.$broadcast('projects:new_project', project)
-        )
+        .then((project) -> $state.go('taskboard.project', id: project.id))
 
 angular
   .module('TodoApp')
@@ -23,5 +21,6 @@ angular
     '$auth',
     '$rootScope',
     '$modal',
+    '$state',
     HeaderController
   ])

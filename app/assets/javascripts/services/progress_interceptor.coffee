@@ -1,6 +1,6 @@
 angular
   .module('TodoApp')
-  .factory('ProgressInterceptorFactory', ['ngProgressFactory', (ngProgressFactory)->
+  .factory('ProgressInterceptor', ['ngProgressFactory', (ngProgressFactory)->
     Interceptor = {}
 
     progress = null

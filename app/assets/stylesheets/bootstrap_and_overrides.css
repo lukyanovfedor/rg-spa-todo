@@ -3,7 +3,7 @@
   =require twitter-bootstrap-static/fontawesome
   */
 
-body { padding-top: 70px; }
+body { padding-top: 70px; background: #f1f1f1; }
 
 #ngProgress {
     margin: 0;
@@ -27,6 +27,11 @@ body { padding-top: 70px; }
     left: 0;
     right: 0;
     z-index: 1000;
+}
+
+body.auth { padding-top: 0; }
+body.auth #ngProgress-container {
+    top: 0;
 }
 
 .avatar {

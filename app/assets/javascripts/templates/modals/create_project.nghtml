@@ -5,10 +5,10 @@
 </div>
 
 <div class="modal-body">
-    <form role="form" name="pmc.projectNew" novalidate>
-        <div class="form-group">
+    <form role="form" name="pmc.projectNew" novalidate ng-submit="pmc.create()">
+        <div class="form-group" ng-class="{'has-error': pmc.projectNew.title.$invalid && !pmc.projectNew.title.$pristine}">
             <label>Project title</label>
-            <input type="text" name="title" ng-model="pmc.project.title" required="required" class="form-control"/>
+            <input type="text" name="title" ng-model="pmc.project.title" required autofocus class="form-control"/>
             <p ng-show="pmc.projectNew.title.$invalid && !pmc.projectNew.title.$pristine" class="help-block">
                 Title is required.
             </p>

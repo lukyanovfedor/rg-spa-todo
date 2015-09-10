@@ -32,6 +32,16 @@ angular
         controller: 'ProjectsController'
         controllerAs: 'projectsCtrl'
       )
+      .state('taskboard.project',
+        url: '/projects/:id'
+        templateUrl: 'project.html'
+        controller: 'ProjectController'
+        controllerAs: 'projectCtrl'
+        resolve:
+          project: ['ProjectResource', '$stateParams', (ProjectResource, $stateParams) ->
+            return ProjectResource.get(id: $stateParams.id)
+          ]
+      )
   ])
   .config(['$urlRouterProvider', ($urlRouterProvider) ->
     $urlRouterProvider.otherwise '/taskboard/projects'
@@ -42,6 +52,6 @@ angular
     )
   ])
   .config(['$httpProvider', ($httpProvider) ->
-    $httpProvider.interceptors.unshift('ProgressInterceptorFactory')
-    $httpProvider.interceptors.push('CsrfInterceptorFactory')
+    $httpProvider.interceptors.push('ProgressInterceptor')
+    $httpProvider.interceptors.push('CsrfInterceptor')
   ])

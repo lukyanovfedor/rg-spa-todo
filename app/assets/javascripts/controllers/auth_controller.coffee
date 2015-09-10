@@ -1,5 +1,8 @@
 class AuthController
-  constructor: ($auth) ->
+  constructor: (Template, $auth) ->
+    Template.setTitle('Welcome')
+    Template.setBodyClasses('auth')
+
     @registerData = {}
     @register = $auth.submitRegistration.bind($auth, @registerData)
 
@@ -9,6 +12,7 @@ class AuthController
 angular
   .module('TodoApp')
   .controller('AuthController', [
+    'Template',
     '$auth',
     AuthController
   ])
