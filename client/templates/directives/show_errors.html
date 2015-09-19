@@ -1,0 +1,7 @@
+<div>
+    <div class="validation-errors" ng-if="unValid()">
+        <p ng-repeat="(rule, _) in errors" ng-if="messages[rule]" class="help-block">
+            {{ messages[rule] }}
+        </p>
+    </div>
+</div>

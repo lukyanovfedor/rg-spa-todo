@@ -1,9 +1,6 @@
 .projects-page {
   .project {
     position: relative;
-    padding: 15px 20px;
-    width: 740px;
-    margin: 0 auto 25px;
 
     .project-title {
       .not-edit {
@@ -16,6 +13,18 @@
           position: absolute;
           top: 14px;
           right: 20px;
+          cursor: pointer;
+          z-index: 5;
+        }
+
+        .project-link {
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: transparent;
+          z-index: 1;
           cursor: pointer;
         }
       }

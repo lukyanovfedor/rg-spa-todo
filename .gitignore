@@ -13,3 +13,7 @@
 /tmp
 /.idea
 
+.DS_Store
+
+/client/node_modules
+npm-debug.log

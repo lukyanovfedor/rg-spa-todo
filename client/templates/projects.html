@@ -1,5 +1,7 @@
 <div class="container projects-page">
-    <div class="project card" ng-if="projectsCtrl.projects.length" ng-repeat="project in projectsCtrl.projects">
+    <div class="project card"
+         ng-if="projectsCtrl.projects.length"
+         ng-repeat="project in projectsCtrl.projects">
         <div class="project-title">
             <project-title project="project" destroy-cb="projectsCtrl.projectDestroyCallback"></project-title>
         </div>

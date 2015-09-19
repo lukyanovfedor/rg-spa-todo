@@ -6,7 +6,8 @@ class Ability
 
     if user
       can :create, Project
-      can :rud, Project, user_id: user.id
+      can %i(read update destroy), Project, user_id: user.id
+      can :manage, Task, project: { user_id: user.id }
     end
   end
 end

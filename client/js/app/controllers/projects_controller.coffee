@@ -1,6 +1,6 @@
 class ProjectsController
-  constructor: (ProjectResource, $scope) ->
-    @projects = ProjectResource.query()
+  constructor: (projects, $scope) ->
+    @projects = projects || []
 
     @projectDestroyCallback = (project) =>
       @projects = @projects.filter((p) -> !!p.id)
@@ -8,7 +8,7 @@ class ProjectsController
 angular
   .module('TodoApp')
   .controller('ProjectsController', [
-    'ProjectResource',
+    'projects',
     '$scope',
     ProjectsController
   ])

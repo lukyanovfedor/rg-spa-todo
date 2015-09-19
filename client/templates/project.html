@@ -1,0 +1,27 @@
+<div class="projects-page">
+    <div class="project card">
+        <div class="project-title">
+            <project-title project="projectCtrl.project" destroy-cb="projectCtrl.projectDestroyCallback"></project-title>
+        </div>
+    </div>
+
+    <div class="card add-task">
+        <form novalidate name="projectCtrl.newTaskForm" ng-submit="projectCtrl.addNewTask()">
+            <div class="form-group"
+                 ng-class="{'has-error': projectCtrl.newTaskForm.title.$invalid && (!projectCtrl.newTaskForm.title.$pristine || projectCtrl.newTaskForm.$submitted)}">
+
+                <label>New task</label>
+
+                <input type="text" name="title" class="form-control" ng-model="projectCtrl.newTask.title" required />
+
+                <p ng-show="projectCtrl.newTaskForm.title.$invalid && (!projectCtrl.newTaskForm.title.$pristine || projectCtrl.newTaskForm.$submitted)" class="help-block">
+                    Title is required.
+                </p>
+            </div>
+
+            <button class="btn btn-primary" type="submit" ng-disabled="projectCtrl.newTaskForm.$invalid">
+                Add new task
+            </button>
+        </form>
+    </div>
+</div>

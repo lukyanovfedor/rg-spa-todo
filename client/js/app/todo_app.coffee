@@ -3,7 +3,6 @@ angular
     'ui.router',
     'ui.bootstrap',
     'ng-token-auth',
-    'templates',
     'ngProgress',
     'ngResource'
   ])
@@ -21,9 +20,7 @@ angular
         templateUrl: 'taskboard.html'
         resolve:
           auth: ['$auth', '$state', ($auth, $state) ->
-            $auth
-              .validateUser()
-              .catch(-> $state.go('auth'))
+            $auth.validateUser().catch(-> $state.go('auth'))
           ]
       )
       .state('taskboard.projects',
@@ -31,6 +28,10 @@ angular
         templateUrl: 'projects.html'
         controller: 'ProjectsController'
         controllerAs: 'projectsCtrl'
+        resolve:
+          projects: ['ProjectResource', (ProjectResource) ->
+            ProjectResource.query().$promise
+          ]
       )
       .state('taskboard.project',
         url: '/projects/:id'
@@ -39,19 +40,22 @@ angular
         controllerAs: 'projectCtrl'
         resolve:
           project: ['ProjectResource', '$stateParams', (ProjectResource, $stateParams) ->
-            return ProjectResource.get(id: $stateParams.id)
+            ProjectResource.get(id: $stateParams.id).$promise
+          ]
+          tasks: ['project', 'TaskResource', (project, TasksResource) ->
+            TasksResource.query(projectId: project.id).$promise
           ]
       )
   ])
   .config(['$urlRouterProvider', ($urlRouterProvider) ->
     $urlRouterProvider.otherwise '/taskboard/projects'
   ])
+  .config(['$httpProvider', ($httpProvider) ->
+    $httpProvider.interceptors.push('ProgressInterceptor')
+    $httpProvider.interceptors.push('CsrfInterceptor')
+  ])
   .config(['$authProvider', ($authProvider) ->
     $authProvider.configure(
       apiUrl: ''
     )
-  ])
-  .config(['$httpProvider', ($httpProvider) ->
-    $httpProvider.interceptors.push('ProgressInterceptor')
-    $httpProvider.interceptors.push('CsrfInterceptor')
   ])
