@@ -1,0 +1,123 @@
+.tasks {
+  padding: 0;
+
+  .edit {
+    .controls {
+      position: absolute;
+      right: 28px;
+      top: 15px;
+      font-size: 20px;
+
+      span {
+        cursor: pointer;
+        margin: 0 0 0 15px;
+      }
+    }
+  }
+
+  .task {
+    border-bottom: 1px solid #ccc;
+    padding: 12px 20px;
+    position: relative;
+
+    .edit-button {
+      font-size: 20px;
+      position: absolute;
+      top: 9px;
+      right: 24px;
+      cursor: pointer;
+      z-index: 5;
+    }
+
+    &.finished {
+      .custom-checkbox {
+        &:before, &:after {
+          display: block!important;
+        }
+      }
+
+      .task-title {
+        text-decoration: line-through;
+      }
+
+      .task-deadline {
+        color: #333!important;;
+      }
+    }
+
+    .task-state {
+      float: left;
+      width: 5.4054054054%;
+
+      .custom-checkbox {
+        width: 20px;
+        height: 20px;
+        border: 1px solid #ccc;
+        cursor: pointer;
+        position: relative;
+        z-index: 5;
+
+        &:before, &:after {
+          content: '';
+          display: none;
+          position: absolute;
+          background: #ccc;
+        }
+
+        &:before {
+          width: 3px;
+          height: 10px;
+          top: 4px;
+          right: 6px;
+          transform: rotate(35deg);
+        }
+
+        &:after {
+          width: 3px;
+          height: 4px;
+          top: 8px;
+          left: 5px;
+          transform: rotate(-35deg);
+        }
+      }
+    }
+
+    .task-title {
+      float: left;
+      font-size: 16px;
+      position: relative;
+      top: -1px;
+      width: 75%;
+      padding-right: 15px;
+      overflow: hidden;
+      white-space: nowrap;
+      -o-text-overflow: ellipsis;
+      -moz-text-overflow: ellipsis;
+      -webkit-text-overflow: ellipsis;
+      text-overflow: ellipsis;
+    }
+
+    .task-deadline {
+      float: left;
+      font-size: 13px;
+      color: #29bd00;
+      position: relative;
+      top: 3px;
+
+      &.expired {
+        color: #dc1629;
+      }
+    }
+
+    .task-link {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: transparent;
+      z-index: 1;
+      cursor: pointer;
+    }
+  }
+}

@@ -1,9 +1,20 @@
-<div class="container projects-page">
-    <div class="project card"
+<div class="container dashboard">
+    <div class="main card"
          ng-if="projectsCtrl.projects.length"
          ng-repeat="project in projectsCtrl.projects">
-        <div class="project-title">
-            <project-title project="project" destroy-cb="projectsCtrl.projectDestroyCallback"></project-title>
+        <div class="not-edit" ng-if="!project.isEdit">
+            <div class="title">{{ project.title }}</div>
+            <span ng-click="project.isEdit = true" class="edit-button">
+                <i class="fa fa-pencil-square-o"></i>
+            </span>
+
+            <div class="project-link" ui-sref="taskboard.project({id: project.id})">
+            </div>
+        </div>
+
+        <div class="edit" ng-if="project.isEdit">
+            <editable model="project" destroy-cb="projectsCtrl.projectDestroyCallback">
+            </editable>
         </div>
     </div>
 

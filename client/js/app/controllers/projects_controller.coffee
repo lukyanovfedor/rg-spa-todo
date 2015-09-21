@@ -2,7 +2,7 @@ class ProjectsController
   constructor: (projects, $scope) ->
     @projects = projects || []
 
-    @projectDestroyCallback = (project) =>
+    @projectDestroyCallback = () =>
       @projects = @projects.filter((p) -> !!p.id)
 
 angular

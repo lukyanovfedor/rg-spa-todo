@@ -1,0 +1,30 @@
+<div>
+    <form role="form" name="form" ng-submit="finish(this.form)" novalidate>
+        <div class="form-group" has-errors field="title" form="form">
+            <input type="text" name="title" ng-model="model.title" required class="form-control" />
+        </div>
+    </form>
+
+    <div class="controls">
+        <span ng-click="finish(this.form)">
+            <i class="fa fa-check"></i>
+        </span>
+
+        <span ng-if="hasDeadline"
+              ng-click="open = !open"
+              datepicker-popup="yyyy-MM-dd"
+              ng-model="model.deadline"
+              is-open="open"
+              show-button-bar="false">
+            <i class="fa fa-calendar"></i>
+        </span>
+
+        <span ng-click="cancel()">
+            <i class="fa fa-times"></i>
+        </span>
+
+        <span ng-click="delete()">
+            <i class="fa fa-trash-o"></i>
+        </span>
+    </div>
+</div>

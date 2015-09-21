@@ -1,19 +1,34 @@
 class ProjectController
   constructor: (project, tasks, $state, TaskResource) ->
     @project = project
+    @tasks = tasks
+
+    @formatTaskDate = (date) ->
+      moment(date).format('DD MMM YY')
+
+    @taskExpired = (date) ->
+      parseInt(moment(date).valueOf(), 10) < parseInt(moment().startOf('day').valueOf(), 10)
+
+    @toggleTask = (task) ->
+      task.$toggle()
 
     @projectDestroyCallback = () ->
       $state.go('taskboard.projects')
 
-    @newTask = new TaskResource()
+    @taskDestroyCallback = () =>
+      @tasks = @tasks.filter((t) => !!t.id)
+
+    @newTask = new TaskResource(project_id: @project.id)
+
     @addNewTask = () ->
       return if @newTaskForm.$invalid
 
       @newTask
-        .$save(projectId: @project.id)
-        .then(() =>
+        .$create()
+        .then((task) =>
+          @tasks.push(task)
           @newTaskForm.$setPristine()
-          @newTask = new TasksResource()
+          @newTask = new TaskResource(project_id: @project.id)
         )
 
 angular

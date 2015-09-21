@@ -1,0 +1,38 @@
+<div class="dashboard">
+    <div class="back-button-wrap">
+        <div class="back-button" ui-sref="taskboard.project({id: tc.task.project_id})">
+            back to project
+        </div>
+    </div>
+
+    <div class="main task-card card">
+        <div class="not-edit" ng-if="!tc.task.isEdit">
+            <div class="title">{{ tc.task.title }}</div>
+
+            <span ng-click="tc.task.isEdit = true" class="edit-button">
+                <i class="fa fa-pencil-square-o"></i>
+            </span>
+        </div>
+
+        <div class="edit" ng-if="tc.task.isEdit">
+            <editable model="tc.task." destroy-cb="yoy">
+            </editable>
+        </div>
+    </div>
+
+    <div class="card add-comment">
+        <form novalidate name="tc.newCommentForm">
+            <div class="form-group" has-errors field="title" form="prjc.newTaskForm">
+                <label>Comment</label>
+
+                <textarea class="form-control" name="body" required></textarea>
+
+                <show-errors></show-errors>
+            </div>
+
+            <button class="btn btn-primary" type="submit">
+                Add comment
+            </button>
+        </form>
+    </div>
+</div>

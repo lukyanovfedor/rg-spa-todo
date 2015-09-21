@@ -4,7 +4,9 @@ angular
     'ui.bootstrap',
     'ng-token-auth',
     'ngProgress',
-    'ngResource'
+    'ngResource',
+    'ngAnimate'
+    'FormErrors'
   ])
   .config(['$stateProvider', ($stateProvider) ->
     $stateProvider
@@ -37,13 +39,23 @@ angular
         url: '/projects/:id'
         templateUrl: 'project.html'
         controller: 'ProjectController'
-        controllerAs: 'projectCtrl'
+        controllerAs: 'prjc'
         resolve:
           project: ['ProjectResource', '$stateParams', (ProjectResource, $stateParams) ->
             ProjectResource.get(id: $stateParams.id).$promise
           ]
-          tasks: ['project', 'TaskResource', (project, TasksResource) ->
-            TasksResource.query(projectId: project.id).$promise
+          tasks: ['project', 'TaskResource', (project, TaskResource) ->
+            TaskResource.query(projectId: project.id).$promise
+          ]
+      )
+      .state('taskboard.task',
+        url: '/tasks/:id'
+        templateUrl: 'task.html'
+        controller: 'TaskController'
+        controllerAs: 'tc'
+        resolve:
+          task: ['TaskResource', '$stateParams', (TaskResource, $stateParams) ->
+            TaskResource.get(id: $stateParams.id).$promise
           ]
       )
   ])
