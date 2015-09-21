@@ -1,5 +1,4 @@
 class Project < ActiveRecord::Base
-
   belongs_to :user
   has_many :tasks, dependent: :destroy
 
@@ -9,8 +8,7 @@ class Project < ActiveRecord::Base
 
   private
 
-    def capitalize_title
-      self.title.capitalize!
-    end
-
+  def capitalize_title
+    self.title.capitalize!
+  end
 end

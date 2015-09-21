@@ -16,7 +16,6 @@ gem 'mini_magick'
 gem 'kaminari'
 gem 'aasm'
 gem 'twitter-bootstrap-rails'
-gem 'angular-rails-templates', git: 'https://github.com/gaslight/angular-rails-templates.git'
 
 group :development, :test do
   gem 'byebug'

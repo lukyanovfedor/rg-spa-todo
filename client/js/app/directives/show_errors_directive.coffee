@@ -1,37 +1,17 @@
-showErrorsDirective = (ValidationErrors) ->
-
-  link = (scope, el) ->
-    scope.errors = {}
-
-    scope.messages = ValidationErrors
-
-    scope.unValid = () ->
-      scope.form[scope.field].$invalid &&
-        (scope.form[scope.field].$dirty || scope.form.$submitted)
-
-    watchFunk = (newVal) ->
-      scope.errors = newVal
-
-    watchValue = (scope) ->
-      scope.form[scope.field].$error
-
-    unwatch = scope.$watch(watchValue, watchFunk, true)
-
-    scope.$on('$destroy', () -> unwatch())
-
+showErrorsDirective = () ->
   return {
     restrict: 'E'
     replace: true
-    templateUrl: 'directives/show_errors.html'
-    scope:
-      field: '@field'
-      form: '=form'
-    link: link
+    require: '^form'
+    template: [
+      '<div ng-if="form.$dirty" class="validation-errors">',
+        '<form-errors errors-tmpl="directives/show_errors.html"></form-errors>',
+      '</div>'
+    ].join('')
+    link: (scope, el, attrs, form) ->
+      scope.form = form
   }
 
 angular
-.module('TodoApp')
-.directive('showErrors', [
-  'ValidationErrors',
-  showErrorsDirective
-])
+  .module('TodoApp')
+  .directive('showErrors', [showErrorsDirective])

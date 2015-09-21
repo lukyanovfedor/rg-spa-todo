@@ -10,7 +10,7 @@ class ProjectModalController
       @project
         .$save()
         .then($modalInstance.close.bind($modalInstance, @project))
-        .catch($modalInstance.dismiss)
+        .catch(@cancel)
 
 angular
   .module('TodoApp')

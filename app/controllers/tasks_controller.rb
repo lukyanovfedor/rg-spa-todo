@@ -1,11 +1,13 @@
 class TasksController < ApplicationController
-
   load_and_authorize_resource :project, only: %i(create index)
   load_and_authorize_resource through: :project, only: %i(create index)
 
-  load_and_authorize_resource only: %i(update destroy)
+  load_and_authorize_resource except: %i(create index)
 
   def index
+  end
+
+  def show
   end
 
   def create
@@ -26,10 +28,15 @@ class TasksController < ApplicationController
     end
   end
 
+  def toggle
+    if @task.toggle
+    else
+    end
+  end
+
   private
 
-    def task_params
-      params.require(:task).permit(:title, :state, :deadline)
-    end
-
+  def task_params
+    params.require(:task).permit(:title, :state, :deadline)
+  end
 end
