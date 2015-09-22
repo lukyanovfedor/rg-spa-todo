@@ -20,12 +20,44 @@
         </div>
     </div>
 
+    <div class="comments card" ng-if="tc.comments.length">
+        <div class="comment" ng-repeat="comment in tc.comments">
+            <div class="comment-created">
+                <i class="fa fa-clock-o"></i> {{ tc.formatCommentDate(comment.updated_at) }}
+            </div>
+
+            <div class="comment-note">
+                {{ comment.note }}
+            </div>
+
+            <div class="controls">
+                <span class="destroy-comment" ng-click="tc.destroyComment(comment)">
+                    <i class="fa fa-times"></i>
+                </span>
+            </div>
+
+            <div class="comment-attachments">
+                <div class="attachment" ng-repeat="file in comment.files">
+                    <a href="{{ file.url }}" target="_blank">{{file.filename}}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="card add-comment">
-        <form novalidate name="tc.newCommentForm">
-            <div class="form-group" has-errors field="title" form="prjc.newTaskForm">
+        <form novalidate name="tc.newCommentForm" enctype="multipart/form-data" ng-submit="tc.addNewComment()">
+            <div files-upload="tc.newComment.files"></div>
+
+            <ul>
+                <li ng-repeat="f in tc.newComment.files">
+                    {{ f.name }}
+                </li>
+            </ul>
+
+            <div class="form-group" has-errors field="note" form="tc.newCommentForm">
                 <label>Comment</label>
 
-                <textarea class="form-control" name="body" required></textarea>
+                <textarea class="form-control" ng-model="tc.newComment.note" name="note" required></textarea>
 
                 <show-errors></show-errors>
             </div>

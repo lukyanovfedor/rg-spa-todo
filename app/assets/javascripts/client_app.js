@@ -1,5 +1,5 @@
 (function() {
-  angular.module('TodoApp', ['ui.router', 'ui.bootstrap', 'ng-token-auth', 'ngProgress', 'ngResource', 'ngAnimate', 'FormErrors']).config([
+  angular.module('TodoApp', ['ui.router', 'ui.bootstrap', 'ng-token-auth', 'ngProgress', 'ngResource', 'ngAnimate', 'FormErrors', 'angularFileUpload']).config([
     '$stateProvider', function($stateProvider) {
       return $stateProvider.state('auth', {
         url: '/auth',
@@ -62,6 +62,13 @@
             'TaskResource', '$stateParams', function(TaskResource, $stateParams) {
               return TaskResource.get({
                 id: $stateParams.id
+              }).$promise;
+            }
+          ],
+          comments: [
+            'CommentResource', '$stateParams', function(CommentResource, $stateParams) {
+              return CommentResource.query({
+                taskId: $stateParams.id
               }).$promise;
             }
           ]
@@ -276,15 +283,47 @@
   var TaskController;
 
   TaskController = (function() {
-    function TaskController(task) {
+    function TaskController(task, comments, CommentResource) {
       this.task = task;
+      this.comments = comments;
+      this.newComment = new CommentResource({
+        task_id: this.task.id,
+        files: []
+      });
+      this.formatCommentDate = function(date) {
+        return moment(date).format('h:mma MMMM Do YYYY');
+      };
+      this.destroyComment = function(comment) {
+        return comment.$delete().then((function(_this) {
+          return function(comment) {
+            return _this.comments = _this.comments.filter(function(c) {
+              return c.id !== comment.id;
+            });
+          };
+        })(this));
+      };
+      this.addNewComment = function() {
+        if (this.newCommentForm.$invalid) {
+          return;
+        }
+        return this.newComment.$create().then((function(_this) {
+          return function(comment) {
+            _this.comments.push(comment);
+            _this.newCommentForm.$setPristine();
+            return _this.newComment = new CommentResource({
+              task_id: _this.task.id,
+              files: []
+            });
+          };
+        })(this));
+      };
     }
 
     return TaskController;
 
   })();
 
-  angular.module('TodoApp').controller('TaskController', ['task', TaskController]);
+  angular.module('TodoApp').controller('TaskController', ['task', 'comments', 'CommentResource', TaskController]);
 
 }).call(this);
 
@@ -301,7 +340,7 @@
               return scope = element = attrs = null;
             });
           };
-          return setTimeout(removePreloader, 0);
+          return removePreloader();
         }
       };
     }
@@ -392,6 +431,64 @@
 }).call(this);
 
 (function() {
+  var FilesUploadDirective;
+
+  FilesUploadDirective = function() {
+    var ctrl, link;
+    ctrl = function($scope) {
+      return $scope.files = $scope.files || [];
+    };
+    link = function(scope, el) {
+      var drop, input;
+      drop = angular.element(el[0].querySelector('.drop-area'));
+      input = angular.element(el[0].querySelector('input'));
+      drop.on('dragover', (function(_this) {
+        return function(ev) {
+          ev.preventDefault();
+          ev.stopPropagation();
+          return el.addClass('dragover');
+        };
+      })(this));
+      drop.on('dragleave', (function(_this) {
+        return function(ev) {
+          ev.preventDefault();
+          ev.stopPropagation();
+          return el.removeClass('dragover');
+        };
+      })(this));
+      return drop.on('drop', (function(_this) {
+        return function(ev) {
+          var dataTransfer, file, files, i, len;
+          ev.preventDefault();
+          ev.stopPropagation();
+          el.removeClass('dragover');
+          dataTransfer = ev.dataTransfer ? ev.dataTransfer : ev.originalEvent.dataTransfer;
+          files = dataTransfer.files;
+          for (i = 0, len = files.length; i < len; i++) {
+            file = files[i];
+            scope.files.push(file);
+          }
+          return scope.$apply();
+        };
+      })(this));
+    };
+    return {
+      restrict: 'A',
+      replace: true,
+      scope: {
+        files: '=filesUpload'
+      },
+      template: ['<div class="files-upload">', '<div class="drop-area"></div>', '<input type="file" multiple />', '</div>'].join(''),
+      controller: ['$scope', ctrl],
+      link: link
+    };
+  };
+
+  angular.module('TodoApp').directive('filesUpload', [FilesUploadDirective]);
+
+}).call(this);
+
+(function() {
   var hasErrorsDirective;
 
   hasErrorsDirective = function() {
@@ -447,6 +544,54 @@
   };
 
   angular.module('TodoApp').directive('showErrors', [showErrorsDirective]);
+
+}).call(this);
+
+(function() {
+  angular.module('TodoApp').factory('CommentResource', [
+    '$resource', function($resource) {
+      return $resource('/comments/:id.json', {
+        id: '@id'
+      }, {
+        update: {
+          method: 'PUT'
+        },
+        query: {
+          url: '/tasks/:taskId/comments.json',
+          isArray: true,
+          params: {
+            taskId: '@task_id'
+          }
+        },
+        create: {
+          url: '/tasks/:taskId/comments.json',
+          method: 'POST',
+          params: {
+            taskId: '@task_id'
+          },
+          headers: {
+            'Content-Type': void 0,
+            enctype: 'multipart/form-data'
+          },
+          transformRequest: function(data) {
+            var formData, key, value;
+            formData = new FormData();
+            for (key in data) {
+              value = data[key];
+              if (key === 'files') {
+                data.files.forEach(function(file) {
+                  return formData.append("comment[files][]", file, file.name);
+                });
+              } else {
+                formData.append("comment[" + key + "]", value);
+              }
+            }
+            return formData;
+          }
+        }
+      });
+    }
+  ]);
 
 }).call(this);
 
@@ -625,7 +770,7 @@ angular.module('TodoApp').run(['$templateCache', function($templateCache) {
 }]);
 angular.module('TodoApp').run(['$templateCache', function($templateCache) {
     $templateCache.put('task.html',
-        "<div class=\"dashboard\">\n    <div class=\"back-button-wrap\">\n        <div class=\"back-button\" ui-sref=\"taskboard.project({id: tc.task.project_id})\">\n            back to project\n        </div>\n    </div>\n\n    <div class=\"main task-card card\">\n        <div class=\"not-edit\" ng-if=\"!tc.task.isEdit\">\n            <div class=\"title\">{{ tc.task.title }}</div>\n\n            <span ng-click=\"tc.task.isEdit = true\" class=\"edit-button\">\n                <i class=\"fa fa-pencil-square-o\"></i>\n            </span>\n        </div>\n\n        <div class=\"edit\" ng-if=\"tc.task.isEdit\">\n            <editable model=\"tc.task.\" destroy-cb=\"yoy\">\n            </editable>\n        </div>\n    </div>\n\n    <div class=\"card add-comment\">\n        <form novalidate name=\"tc.newCommentForm\">\n            <div class=\"form-group\" has-errors field=\"title\" form=\"prjc.newTaskForm\">\n                <label>Comment</label>\n\n                <textarea class=\"form-control\" name=\"body\" required></textarea>\n\n                <show-errors></show-errors>\n            </div>\n\n            <button class=\"btn btn-primary\" type=\"submit\">\n                Add comment\n            </button>\n        </form>\n    </div>\n</div>");
+        "<div class=\"dashboard\">\n    <div class=\"back-button-wrap\">\n        <div class=\"back-button\" ui-sref=\"taskboard.project({id: tc.task.project_id})\">\n            back to project\n        </div>\n    </div>\n\n    <div class=\"main task-card card\">\n        <div class=\"not-edit\" ng-if=\"!tc.task.isEdit\">\n            <div class=\"title\">{{ tc.task.title }}</div>\n\n            <span ng-click=\"tc.task.isEdit = true\" class=\"edit-button\">\n                <i class=\"fa fa-pencil-square-o\"></i>\n            </span>\n        </div>\n\n        <div class=\"edit\" ng-if=\"tc.task.isEdit\">\n            <editable model=\"tc.task.\" destroy-cb=\"yoy\">\n            </editable>\n        </div>\n    </div>\n\n    <div class=\"comments card\" ng-if=\"tc.comments.length\">\n        <div class=\"comment\" ng-repeat=\"comment in tc.comments\">\n            <div class=\"comment-created\">\n                <i class=\"fa fa-clock-o\"></i> {{ tc.formatCommentDate(comment.updated_at) }}\n            </div>\n\n            <div class=\"comment-note\">\n                {{ comment.note }}\n            </div>\n\n            <div class=\"controls\">\n                <span class=\"destroy-comment\" ng-click=\"tc.destroyComment(comment)\">\n                    <i class=\"fa fa-times\"></i>\n                </span>\n            </div>\n\n            <div class=\"comment-attachments\">\n                <div class=\"attachment\" ng-repeat=\"file in comment.files\">\n                    <a href=\"{{ file.url }}\" target=\"_blank\">{{file.filename}}</a>\n                </div>\n            </div>\n        </div>\n    </div>\n\n    <div class=\"card add-comment\">\n        <form novalidate name=\"tc.newCommentForm\" enctype=\"multipart/form-data\" ng-submit=\"tc.addNewComment()\">\n            <div files-upload=\"tc.newComment.files\"></div>\n\n            <ul>\n                <li ng-repeat=\"f in tc.newComment.files\">\n                    {{ f.name }}\n                </li>\n            </ul>\n\n            <div class=\"form-group\" has-errors field=\"note\" form=\"tc.newCommentForm\">\n                <label>Comment</label>\n\n                <textarea class=\"form-control\" ng-model=\"tc.newComment.note\" name=\"note\" required></textarea>\n\n                <show-errors></show-errors>\n            </div>\n\n            <button class=\"btn btn-primary\" type=\"submit\">\n                Add comment\n            </button>\n        </form>\n    </div>\n</div>");
 }]);
 angular.module('TodoApp').run(['$templateCache', function($templateCache) {
     $templateCache.put('taskboard.html',

@@ -1,5 +1,5 @@
 class CommentFileUploader < CarrierWave::Uploader::Base
-  FILES_WHITELIST = %w(pdf txt)
+  FILES_WHITELIST = %w(pdf txt png jpg)
 
   storage :file
 
@@ -18,7 +18,7 @@ class CommentFileUploader < CarrierWave::Uploader::Base
   private
 
   def secure_token
-    name = :"@#{mounted_as}_secure_token"
+    name = :"@secure_token_#{file.object_id}"
     model.instance_variable_get(name) || model.instance_variable_set(name, SecureRandom.uuid)
   end
 end

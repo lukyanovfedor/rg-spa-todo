@@ -5,8 +5,9 @@ angular
     'ng-token-auth',
     'ngProgress',
     'ngResource',
-    'ngAnimate'
-    'FormErrors'
+    'ngAnimate',
+    'FormErrors',
+    'angularFileUpload'
   ])
   .config(['$stateProvider', ($stateProvider) ->
     $stateProvider
@@ -56,6 +57,9 @@ angular
         resolve:
           task: ['TaskResource', '$stateParams', (TaskResource, $stateParams) ->
             TaskResource.get(id: $stateParams.id).$promise
+          ]
+          comments: ['CommentResource', '$stateParams', (CommentResource, $stateParams) ->
+            CommentResource.query(taskId: $stateParams.id).$promise
           ]
       )
   ])

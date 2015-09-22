@@ -6,12 +6,13 @@ angular
       link: (scope, element, attrs) ->
         removePreloader = () ->
           $animate
-          .leave(element.children())
-          .then(() ->
-            element.remove()
-            scope = element = attrs = null
-          )
+            .leave(element.children())
+            .then(() ->
+              element.remove()
+              scope = element = attrs = null
+            )
 
-        setTimeout(removePreloader, 0)
+#        setTimeout(removePreloader, 0)
+        removePreloader()
     }
   ])

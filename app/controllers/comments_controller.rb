@@ -11,19 +11,19 @@ class CommentsController < ApplicationController
   end
 
   def create
-    if @task.save
+    if @comment.save
     else
     end
   end
 
   def update
-    if @task.update(task_params)
+    if @comment.update(comment_params)
     else
     end
   end
 
   def destroy
-    if @task.destroy
+    if @comment.destroy
     else
     end
   end

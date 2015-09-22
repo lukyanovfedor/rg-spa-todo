@@ -1,0 +1,37 @@
+.comments {
+  padding: 0;
+
+  .comment {
+    border-bottom: 1px solid #ccc;
+    padding: 8px 15px;
+    position: relative;
+
+    .comment-created {
+      font-size: 12px;
+      font-weight: bold;
+      margin: 0 0 7px;
+    }
+
+    .comment-note {
+      margin: 0 0 7px;
+    }
+
+    .comment-attachments {
+      font-size: 12px;
+    }
+
+    .controls {
+      position: absolute;
+      top: 3px;
+      right: 15px;
+
+      .destroy-comment {
+        cursor: pointer;
+        font-size: 17px;
+      }
+
+      .destroy-comment {
+      }
+    }
+  }
+}

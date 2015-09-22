@@ -24,3 +24,29 @@
     font-size: 15px;
   }
 }
+
+.files-upload {
+  height: 40px;
+
+  .drop-area {
+    position: relative;
+    background: red;
+    height: 100%;
+    z-index: 5;
+  }
+
+  &.dragover {
+    .drop-area {
+      background: black;
+    }
+  }
+
+  input {
+    opacity: 0;
+    position: relative;
+    z-index: 1;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+}
