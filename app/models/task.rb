@@ -1,8 +1,6 @@
 class Task < ActiveRecord::Base
   include AASM
 
-  STATES = %i(in_progress finished)
-
   belongs_to :project
 
   has_many :comments, dependent: :destroy

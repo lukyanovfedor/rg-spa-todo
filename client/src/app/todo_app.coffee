@@ -78,7 +78,7 @@ angular
     $urlRouterProvider.otherwise '/auth'
   ])
   .config(['$httpProvider', ($httpProvider) ->
-    $httpProvider.interceptors.push('ErrorHandlingInterceptor', 'ProgressInterceptor', 'CsrfInterceptor')
+    $httpProvider.interceptors.push('ErrorHandlingInterceptor', 'ProgressInterceptor')
   ])
   .config(['$authProvider', ($authProvider) ->
     $authProvider.configure(

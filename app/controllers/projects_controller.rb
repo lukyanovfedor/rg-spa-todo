@@ -12,9 +12,6 @@ class ProjectsController < ApplicationController
     @project.update!(project_params)
   end
 
-  def show
-  end
-
   def destroy
     @project.destroy!
   end
