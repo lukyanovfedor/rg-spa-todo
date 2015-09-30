@@ -6,12 +6,6 @@ default: &default
 development:
   <<: *default
   database: todo_development
-  #username: todo
-  #password:
-  #host: localhost
-  #port: 5432
-  #schema_search_path: myapp,sharedapp,public
-  #min_messages: notice
 test:
   <<: *default
   database: todo_test
