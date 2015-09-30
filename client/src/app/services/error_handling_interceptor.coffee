@@ -12,6 +12,9 @@ ErrorHandlingInterceptor = ($q, Notifications) ->
     else if err.data.errors && err.data.errors.length
       err.data.errors.forEach (e) ->
         Notifications.error(text: e)
+    else if err.data.errors && err.data.errors.full_messages
+      err.data.errors.full_messages.forEach (e) ->
+        Notifications.error(text: e)
     else
       Notifications.error()
 

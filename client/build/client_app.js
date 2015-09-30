@@ -489,162 +489,6 @@
 
 (function() {
   'use strict';
-  var AttachmentResourceFactory;
-
-  AttachmentResourceFactory = function($resource) {
-    return $resource('/attachments/:id.json', {
-      id: '@id'
-    });
-  };
-
-  angular.module('TodoApp').factory('AttachmentResource', ['$resource', AttachmentResourceFactory]);
-
-}).call(this);
-
-(function() {
-  'use strict';
-  var CommentResourceFactory;
-
-  CommentResourceFactory = function($resource) {
-    var cleanResourceAttributes, createFormData;
-    cleanResourceAttributes = function(data) {
-      var cleanData, key, pattern, value;
-      cleanData = {};
-      pattern = /^\$.+|toJSON$/;
-      for (key in data) {
-        value = data[key];
-        if (!pattern.test(key)) {
-          cleanData[key] = data[key];
-        }
-      }
-      return cleanData;
-    };
-    createFormData = function(data) {
-      var formData, key, name, value;
-      formData = new FormData();
-      for (key in data) {
-        value = data[key];
-        if (key === 'attachments') {
-          name = 'comment[attachments_attributes][][file]';
-          data.attachments.forEach(function(file) {
-            if (file instanceof File) {
-              return formData.append(name, file, file.name);
-            }
-          });
-        } else {
-          formData.append("comment[" + key + "]", value);
-        }
-      }
-      return formData;
-    };
-    return $resource('/comments/:id.json', {
-      id: '@id'
-    }, {
-      update: {
-        method: 'PUT',
-        headers: {
-          'Content-Type': void 0
-        },
-        transformRequest: [cleanResourceAttributes, createFormData]
-      },
-      query: {
-        url: '/tasks/:taskId/comments.json',
-        isArray: true,
-        params: {
-          taskId: '@task_id'
-        }
-      },
-      create: {
-        url: '/tasks/:taskId/comments.json',
-        method: 'POST',
-        params: {
-          taskId: '@task_id'
-        },
-        headers: {
-          'Content-Type': void 0
-        },
-        transformRequest: [cleanResourceAttributes, createFormData]
-      }
-    });
-  };
-
-  angular.module('TodoApp').factory('CommentResource', ['$resource', CommentResourceFactory]);
-
-}).call(this);
-
-(function() {
-  'use strict';
-  var ProjectResourceFactory;
-
-  ProjectResourceFactory = function($resource) {
-    return $resource('/projects/:id.json', {
-      id: '@id'
-    }, {
-      update: {
-        method: 'PUT'
-      }
-    });
-  };
-
-  angular.module('TodoApp').factory('ProjectResource', ['$resource', ProjectResourceFactory]);
-
-}).call(this);
-
-(function() {
-  'use strict';
-  var TaskResourceFactory;
-
-  TaskResourceFactory = function($resource) {
-    var convertDeadlineFormat;
-    convertDeadlineFormat = function(data) {
-      if (data.deadline) {
-        data.deadline = moment(data.deadline).format('DD-MM-YYYY');
-      }
-      return angular.toJson(data);
-    };
-    return $resource('/tasks/:id/:action.json', {
-      id: '@id'
-    }, {
-      update: {
-        method: 'PUT',
-        transformRequest: [convertDeadlineFormat]
-      },
-      toggle: {
-        method: 'PUT',
-        params: {
-          action: 'toggle'
-        }
-      },
-      sort: {
-        method: 'PUT',
-        params: {
-          action: 'sort'
-        }
-      },
-      query: {
-        url: '/projects/:projectId/tasks.json',
-        isArray: true,
-        params: {
-          projectId: '@project_id'
-        }
-      },
-      create: {
-        url: '/projects/:projectId/tasks.json',
-        method: 'POST',
-        params: {
-          projectId: '@project_id'
-        },
-        transformRequest: [convertDeadlineFormat]
-      }
-    });
-  };
-
-  angular.module('TodoApp').factory('TaskResource', ['$resource', TaskResourceFactory]);
-
-}).call(this);
-
-(function() {
-  'use strict';
   var AppPreloadDirective;
 
   AppPreloadDirective = function($animate, $timeout) {
@@ -873,6 +717,162 @@
 
 (function() {
   'use strict';
+  var AttachmentResourceFactory;
+
+  AttachmentResourceFactory = function($resource) {
+    return $resource('/attachments/:id.json', {
+      id: '@id'
+    });
+  };
+
+  angular.module('TodoApp').factory('AttachmentResource', ['$resource', AttachmentResourceFactory]);
+
+}).call(this);
+
+(function() {
+  'use strict';
+  var CommentResourceFactory;
+
+  CommentResourceFactory = function($resource) {
+    var cleanResourceAttributes, createFormData;
+    cleanResourceAttributes = function(data) {
+      var cleanData, key, pattern, value;
+      cleanData = {};
+      pattern = /^\$.+|toJSON$/;
+      for (key in data) {
+        value = data[key];
+        if (!pattern.test(key)) {
+          cleanData[key] = data[key];
+        }
+      }
+      return cleanData;
+    };
+    createFormData = function(data) {
+      var formData, key, name, value;
+      formData = new FormData();
+      for (key in data) {
+        value = data[key];
+        if (key === 'attachments') {
+          name = 'comment[attachments_attributes][][file]';
+          data.attachments.forEach(function(file) {
+            if (file instanceof File) {
+              return formData.append(name, file, file.name);
+            }
+          });
+        } else {
+          formData.append("comment[" + key + "]", value);
+        }
+      }
+      return formData;
+    };
+    return $resource('/comments/:id.json', {
+      id: '@id'
+    }, {
+      update: {
+        method: 'PUT',
+        headers: {
+          'Content-Type': void 0
+        },
+        transformRequest: [cleanResourceAttributes, createFormData]
+      },
+      query: {
+        url: '/tasks/:taskId/comments.json',
+        isArray: true,
+        params: {
+          taskId: '@task_id'
+        }
+      },
+      create: {
+        url: '/tasks/:taskId/comments.json',
+        method: 'POST',
+        params: {
+          taskId: '@task_id'
+        },
+        headers: {
+          'Content-Type': void 0
+        },
+        transformRequest: [cleanResourceAttributes, createFormData]
+      }
+    });
+  };
+
+  angular.module('TodoApp').factory('CommentResource', ['$resource', CommentResourceFactory]);
+
+}).call(this);
+
+(function() {
+  'use strict';
+  var ProjectResourceFactory;
+
+  ProjectResourceFactory = function($resource) {
+    return $resource('/projects/:id.json', {
+      id: '@id'
+    }, {
+      update: {
+        method: 'PUT'
+      }
+    });
+  };
+
+  angular.module('TodoApp').factory('ProjectResource', ['$resource', ProjectResourceFactory]);
+
+}).call(this);
+
+(function() {
+  'use strict';
+  var TaskResourceFactory;
+
+  TaskResourceFactory = function($resource) {
+    var convertDeadlineFormat;
+    convertDeadlineFormat = function(data) {
+      if (data.deadline) {
+        data.deadline = moment(data.deadline).format('DD-MM-YYYY');
+      }
+      return angular.toJson(data);
+    };
+    return $resource('/tasks/:id/:action.json', {
+      id: '@id'
+    }, {
+      update: {
+        method: 'PUT',
+        transformRequest: [convertDeadlineFormat]
+      },
+      toggle: {
+        method: 'PUT',
+        params: {
+          action: 'toggle'
+        }
+      },
+      sort: {
+        method: 'PUT',
+        params: {
+          action: 'sort'
+        }
+      },
+      query: {
+        url: '/projects/:projectId/tasks.json',
+        isArray: true,
+        params: {
+          projectId: '@project_id'
+        }
+      },
+      create: {
+        url: '/projects/:projectId/tasks.json',
+        method: 'POST',
+        params: {
+          projectId: '@project_id'
+        },
+        transformRequest: [convertDeadlineFormat]
+      }
+    });
+  };
+
+  angular.module('TodoApp').factory('TaskResource', ['$resource', TaskResourceFactory]);
+
+}).call(this);
+
+(function() {
+  'use strict';
   var CommentsFactory;
 
   CommentsFactory = function($q) {
@@ -963,6 +963,12 @@
         });
       } else if (err.data.errors && err.data.errors.length) {
         err.data.errors.forEach(function(e) {
+          return Notifications.error({
+            text: e
+          });
+        });
+      } else if (err.data.errors && err.data.errors.full_messages) {
+        err.data.errors.full_messages.forEach(function(e) {
           return Notifications.error({
             text: e
           });
