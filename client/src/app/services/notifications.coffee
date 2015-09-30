@@ -8,11 +8,11 @@ NotificationsFactory = ($timeout) ->
     success:
       title: 'Success'
       text: 'Action performed successfully.'
-      time: 3000
+      time: 4500
     error:
       title: 'Error'
       text: 'Oops, something went wrong.'
-      time: 3000
+      time: 4500
 
   current = []
   queue = []

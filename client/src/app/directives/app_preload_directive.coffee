@@ -9,9 +9,7 @@ AppPreloadDirective = ($animate, $timeout) ->
           el.remove()
           scope = el = attrs = null
 
-
-#    $timeout(removePreloader, 0)
-    removePreloader()
+    $timeout(removePreloader, 0)
 
   {
     restrict: 'A'

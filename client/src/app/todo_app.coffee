@@ -18,16 +18,36 @@ angular
         templateUrl: 'templates/auth.html'
         controller: 'AuthController'
         controllerAs: 'authCtrl'
+        resolve:
+          auth: ['$auth', '$state', '$q', ($auth, $state, $q) ->
+            deferred = $q.defer()
+
+            $auth
+              .validateUser()
+              .then () ->
+                $state.go('taskboard.projects')
+              .catch () ->
+                deferred.resolve()
+
+            deferred.promise
+          ]
       )
       .state('taskboard',
         url: '/taskboard'
         abstract: true
         templateUrl: 'templates/taskboard.html'
         resolve:
-          auth: ['$auth', '$state', ($auth, $state) ->
+          auth: ['$auth', '$state', '$q', ($auth, $state, $q) ->
+            deferred = $q.defer()
+
             $auth
               .validateUser()
-              .catch () -> $state.go('auth')
+              .then (response) ->
+                deferred.resolve(response)
+              .catch () ->
+                $state.go('auth')
+
+            deferred.promise
           ]
       )
       .state('taskboard.projects',
@@ -55,7 +75,7 @@ angular
       )
   ])
   .config(['$urlRouterProvider', ($urlRouterProvider) ->
-    $urlRouterProvider.otherwise '/taskboard/projects'
+    $urlRouterProvider.otherwise '/auth'
   ])
   .config(['$httpProvider', ($httpProvider) ->
     $httpProvider.interceptors.push('ErrorHandlingInterceptor', 'ProgressInterceptor', 'CsrfInterceptor')
