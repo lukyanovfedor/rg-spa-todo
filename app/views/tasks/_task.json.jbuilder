@@ -1,1 +1,1 @@
-json.(task, :id, :title, :deadline, :state, :created_at, :updated_at, :project_id)
+json.(task, :id, :title, :deadline, :state, :created_at, :updated_at, :project_id, :position)

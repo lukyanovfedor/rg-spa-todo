@@ -1,13 +1,17 @@
 class Task < ActiveRecord::Base
   include AASM
 
-  belongs_to :project
-
-  has_many :comments
-
   STATES = %i(in_progress finished)
 
-  aasm column: :state, whiny_transitions: false  do
+  belongs_to :project
+
+  has_many :comments, dependent: :destroy
+
+  acts_as_list scope: :project
+
+  validates :title, :project, presence: true
+
+  aasm column: :state do
     state :in_progress, initial: true
     state :finished
 
@@ -20,7 +24,7 @@ class Task < ActiveRecord::Base
     end
   end
 
-  def toggle
+  def toggle!
     if in_progress?
       done!
     else

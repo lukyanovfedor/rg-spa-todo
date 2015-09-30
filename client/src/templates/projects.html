@@ -1,0 +1,89 @@
+<div class="container dashboard">
+    <div ng-repeat="project in projectsCtrl.projects">
+        <div class="main card">
+            <div class="not-edit" ng-if="!project.isEdit">
+                <div class="title">{{ project.title }}</div>
+
+                <span ng-click="projectsCtrl.edit(project)" class="edit-button">
+                    <i class="fa fa-pencil-square-o"></i>
+                </span>
+            </div>
+
+            <div class="edit" ng-if="project.isEdit">
+                <edit-mode model="project" destroy-cb="projectsCtrl.destroyCb" update-cb="projectsCtrl.updateCb">
+                </edit-mode>
+            </div>
+        </div>
+
+        <div ng-controller="TasksController as tasksCtrl">
+            <div class="tasks card" ng-model="project.tasks" as-sortable="tasksCtrl.dragAndDropCb">
+                <div ng-repeat="task in project.tasks" class="task clearfix {{ task.state }}" as-sortable-item>
+                    <div class="not-edit" as-sortable-item-handle>
+
+                        <div class="task-state">
+                            <div class="custom-checkbox" ng-click="tasksCtrl.toggle(task)">
+                            </div>
+                        </div>
+
+                        <div class="task-title">
+                            {{ task.title }}
+                        </div>
+
+                        <div ng-if="task.deadline" class="task-deadline" ng-class="{'expired': tasksCtrl.isExpired(task)}">
+                            {{ tasksCtrl.formatDeadline(task) }}
+                        </div>
+
+                        <div class="task-link" ui-sref="taskboard.task({id: task.id})">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card add-task">
+                <form novalidate name="tasksCtrl.form" ng-submit="tasksCtrl.createTask(project)">
+                    <div class="add-deadline">
+                        <a ng-click="open = !open"
+                           datepicker-popup="yyyy-MM-dd"
+                           ng-model="tasksCtrl.newTask.deadline"
+                           is-open="open"
+                           show-button-bar="false">
+                            {{ tasksCtrl.newTask.deadline ? 'Edit deadline' : 'Add deadline' }}
+                        </a>
+                    </div>
+
+                    <div class="form-group" has-errors="title">
+                        <label>New task</label>
+
+                        <input type="text" name="title" class="form-control" ng-model="tasksCtrl.newTask.title" required />
+
+                        <ng-messages ng-if="tasksCtrl.form.$submitted || tasksCtrl.form.title.$dirty" for="tasksCtrl.form.title.$error">
+                            <p ng-message="required" class="help-block">
+                                Title is required
+                            </p>
+                        </ng-messages>
+                    </div>
+
+                    <button class="btn btn-primary" type="submit" ng-disabled="tasksCtrl.form.$invalid">
+                        Add new task
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <hr ng-if="!$last" class="projects-separator" />
+    </div>
+
+    <div class="empty card" ng-if="!projectsCtrl.projects.length">
+        <div class="empty-image">
+            <img src="/assets/empty.png" />
+        </div>
+
+        <p class="text">
+            You weren't have created any projects yet, but it's good that it's easy to fix ;)
+        </p>
+
+        <p class="text">
+            Just select <b>"Create new project"</b> from user menu
+        </p>
+    </div>
+</div>

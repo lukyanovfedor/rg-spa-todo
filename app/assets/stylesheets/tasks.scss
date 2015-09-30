@@ -1,20 +1,6 @@
 .tasks {
   padding: 0;
 
-  .edit {
-    .controls {
-      position: absolute;
-      right: 28px;
-      top: 15px;
-      font-size: 20px;
-
-      span {
-        cursor: pointer;
-        margin: 0 0 0 15px;
-      }
-    }
-  }
-
   .task {
     border-bottom: 1px solid #ccc;
     padding: 12px 20px;
@@ -87,7 +73,7 @@
       font-size: 16px;
       position: relative;
       top: -1px;
-      width: 75%;
+      width: 86%;
       padding-right: 15px;
       overflow: hidden;
       white-space: nowrap;
@@ -118,6 +104,26 @@
       background: transparent;
       z-index: 1;
       cursor: pointer;
+    }
+  }
+}
+
+.dashboard {
+  .main.task-card {
+
+
+    .edit {
+      .controls {
+        position: absolute;
+        right: 15px;
+        top: 18px;
+        font-size: 22px;
+
+        span {
+          cursor: pointer;
+          margin: 0 0 0 15px;
+        }
+      }
     }
   }
 }

@@ -25,13 +25,33 @@
       top: 3px;
       right: 15px;
 
-      .destroy-comment {
+      .destroy-comment, .edit-comment {
         cursor: pointer;
         font-size: 17px;
       }
 
-      .destroy-comment {
+      .edit-comment {
+        margin: 0 10px 0 0;
       }
+    }
+  }
+}
+
+.add-comment {
+  .uploaded-attachments {
+    font-size: 12px;
+
+    span {
+      color: #29bd00;
+    }
+
+    .remove-attachment {
+      color: #333;
+      margin: 0 0 0 7px;
+      position: relative;
+      top: 2px;
+      font-size: 16px;
+      cursor: pointer;
     }
   }
 }

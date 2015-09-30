@@ -11,32 +11,24 @@ class TasksController < ApplicationController
   end
 
   def create
-    if @task.save
-    else
-    end
+    @task.save!
   end
 
   def update
-    if @task.update(task_params)
-    else
-    end
+    @task.update!(task_params)
   end
 
   def destroy
-    if @task.destroy
-    else
-    end
+    @task.destroy!
   end
 
   def toggle
-    if @task.toggle
-    else
-    end
+    @task.toggle!
   end
 
   private
 
   def task_params
-    params.require(:task).permit(:title, :state, :deadline)
+    params.require(:task).permit(:title, :state, :deadline, :position)
   end
 end

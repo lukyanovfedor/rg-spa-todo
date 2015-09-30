@@ -1,0 +1,39 @@
+<header ng-controller="HeaderController as headerCtrl">
+    <nav class="navbar navbar-inverse navbar-default navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <a class="navbar-brand" ui-sref="taskboard.projects">Todo</a>
+            </div>
+
+            <div class="navbar-right" ng-if="headerCtrl.user.signedIn">
+                <div dropdown>
+                    <div class="avatar" dropdown-toggle>
+                        <img ng-src="{{ headerCtrl.user.image.url }}">
+                    </div>
+
+                    <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                        <li>
+                            <a ui-sref="taskboard.projects">
+                                My projects
+                            </a>
+                        </li>
+                        <li role="presentation" class="divider"></li>
+                        <li>
+                            <a ng-click="headerCtrl.createProject()">
+                                Create new project
+                            </a>
+                        </li>
+                        <li role="presentation" class="divider"></li>
+                        <li>
+                            <a ng-click="headerCtrl.signOut()">
+                                Sign out
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<ui-view></ui-view>

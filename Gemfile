@@ -16,6 +16,7 @@ gem 'carrierwave', github:'carrierwaveuploader/carrierwave'
 gem 'mini_magick'
 gem 'kaminari'
 gem 'aasm'
+gem 'acts_as_list'
 gem 'twitter-bootstrap-rails'
 
 group :development, :test do

@@ -1,12 +1,26 @@
 <!DOCTYPE html>
-<html ng-app="TodoApp" ng-controller="ApplicationController as app">
+<html ng-app="TodoApp" ng-controller="MainController as mainCtrl">
 <head>
-  <title ng-bind="app.Template.getTitle()"></title>
+  <title ng-bind="mainCtrl.Template.getTitle()">
+    Todo
+  </title>
+
+  <%= favicon_link_tag 'favicon.ico' %>
   <%= stylesheet_link_tag 'application', media: 'all' %>
+
   <%= csrf_meta_tags %>
 </head>
-<body class="{{ app.Template.getBodyClasses() }}">
+<body class="{{ mainCtrl.Template.getBodyClasses() }}">
   <%= yield %>
+
+  <div class="notifications-list">
+    <div ng-repeat="n in mainCtrl.notifications"
+         class="notification {{ n.type }}"
+         ng-click="mainCtrl.removeNotification(n)">
+      <div class="title">{{ n.title }}</div>
+      <div class="text">{{ n.text }}</div>
+    </div>
+  </div>
 
   <%= javascript_include_tag 'application' %>
 </body>

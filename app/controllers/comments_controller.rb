@@ -11,26 +11,20 @@ class CommentsController < ApplicationController
   end
 
   def create
-    if @comment.save
-    else
-    end
+    @comment.save!
   end
 
   def update
-    if @comment.update(comment_params)
-    else
-    end
+    @comment.update!(comment_params)
   end
 
   def destroy
-    if @comment.destroy
-    else
-    end
+    @comment.destroy!
   end
 
   private
 
   def comment_params
-    params.require(:comment).permit(:note, {files: []})
+    params.require(:comment).permit(:note, attachments_attributes: [:file])
   end
 end

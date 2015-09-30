@@ -1,0 +1,112 @@
+<div class="auth-forms">
+    <div class="brand">
+        Todo
+    </div>
+
+    <form ng-submit="authCtrl.login()" role="form" class="login-form" name="authCtrl.loginForm" novalidate>
+        <div class="form-group" has-errors="email">
+            <label>Email</label>
+            <input type="email" name="email" ng-model="authCtrl.loginData.email" required="required" class="form-control"/>
+
+            <ng-messages ng-if="authCtrl.loginForm.$submitted || authCtrl.loginForm.email.$dirty" for="authCtrl.loginForm.email.$error">
+                <p ng-message="required" class="help-block">
+                    Email is required
+                </p>
+
+                <p ng-message="email" class="help-block">
+                    Email has wrong format
+                </p>
+            </ng-messages>
+        </div>
+
+        <div class="form-group" has-errors="password">
+            <label>Password</label>
+            <input type="password" name="password" ng-model="authCtrl.loginData.password" required="required" class="form-control"/>
+
+            <ng-messages ng-if="authCtrl.loginForm.$submitted || authCtrl.loginForm.password.$dirty" for="authCtrl.loginForm.password.$error">
+                <p ng-message="required" class="help-block">
+                    Password is required
+                </p>
+            </ng-messages>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block">
+            Sign in
+        </button>
+
+        <a ng-click="authCtrl.facebook()" class="btn btn-primary btn-block">
+            Enter via Facebook
+        </a>
+    </form>
+
+    <div class="or">
+        <span>or</span>
+    </div>
+
+    <form ng-submit="authCtrl.register()" role="form" class="register-form" novalidate name="authCtrl.regForm">
+        <div class="form-group" has-errors="first_name">
+            <label>First name</label>
+            <input type="text" name="first_name" ng-model="authCtrl.registerData.first_name" required="required" class="form-control"/>
+
+            <ng-messages ng-if="authCtrl.regForm.$submitted || authCtrl.regForm.first_name.$dirty" for="authCtrl.regForm.first_name.$error">
+                <p ng-message="required" class="help-block">
+                    First name is required
+                </p>
+            </ng-messages>
+        </div>
+
+        <div class="form-group" has-errors="last_name">
+            <label>Last name</label>
+            <input type="text" name="last_name" ng-model="authCtrl.registerData.last_name" required="required" class="form-control"/>
+
+            <ng-messages ng-if="authCtrl.regForm.$submitted || authCtrl.regForm.last_name.$dirty" for="authCtrl.regForm.last_name.$error">
+                <p ng-message="required" class="help-block">
+                    Last name is required
+                </p>
+            </ng-messages>
+        </div>
+
+        <div class="form-group" has-errors="email">
+            <label>Email</label>
+            <input type="email" name="email" ng-model="authCtrl.registerData.email" required="required" class="form-control"/>
+
+            <ng-messages ng-if="authCtrl.regForm.$submitted || authCtrl.regForm.email.$dirty" for="authCtrl.regForm.email.$error">
+                <p ng-message="required" class="help-block">
+                    Email is required
+                </p>
+
+                <p ng-message="email" class="help-block">
+                    Email has wrong format
+                </p>
+            </ng-messages>
+        </div>
+
+        <div class="form-group" has-errors="password">
+            <label>Password</label>
+            <input type="password" name="password" ng-model="authCtrl.registerData.password" required="required" class="form-control"/>
+
+            <ng-messages ng-if="authCtrl.regForm.$submitted || authCtrl.regForm.password.$dirty" for="authCtrl.regForm.password.$error">
+                <p ng-message="required" class="help-block">
+                    Password is required
+                </p>
+            </ng-messages>
+        </div>
+
+        <div class="form-group" has-errors="password_confirmation">
+            <label>Password confirmation</label>
+            <input type="password" name="password_confirmation" ng-model="authCtrl.registerData.password_confirmation" required="required" class="form-control"/>
+
+            <ng-messages ng-if="authCtrl.regForm.$submitted || authCtrl.regForm.password_confirmation.$dirty" for="authCtrl.regForm.password_confirmation.$error">
+                <p ng-message="required" class="help-block">
+                    Password confirmation is required
+                </p>
+            </ng-messages>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block">Register</button>
+
+        <a ng-click="authCtrl.facebook()" class="btn btn-primary btn-block">
+            Enter via Facebook
+        </a>
+    </form>
+</div>

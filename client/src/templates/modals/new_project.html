@@ -1,0 +1,31 @@
+<div class="modal-header">
+    <h3 class="modal-title">
+        Create project
+    </h3>
+</div>
+
+<div class="modal-body">
+    <form role="form" name="modalCtrl.form" novalidate ng-submit="modalCtrl.submit()">
+        <div class="form-group" has-errors="title">
+            <label>Project title</label>
+
+            <input type="text" name="title" ng-model="modalCtrl.project.title" required autofocus class="form-control"/>
+
+            <ng-messages ng-if="modalCtrl.form.$submitted || modalCtrl.form.title.$dirty" for="modalCtrl.form.title.$error">
+                <p ng-message="required" class="help-block">
+                    Title is required
+                </p>
+            </ng-messages>
+        </div>
+    </form>
+</div>
+
+<div class="modal-footer">
+    <button class="btn btn-primary" type="button" ng-click="modalCtrl.submit()" ng-disabled="modalCtrl.form.$invalid">
+        Create
+    </button>
+
+    <button class="btn btn-warning" type="button" ng-click="modalCtrl.cancel()">
+        Cancel
+    </button>
+</div>

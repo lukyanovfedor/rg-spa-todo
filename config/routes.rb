@@ -1,14 +1,24 @@
 Rails.application.routes.draw do
   root 'home#index'
-  mount_devise_token_auth_for 'User', at: 'auth'
 
-  resources :projects, except: %i(new edit) do
-    resources :tasks, except: %i(new edit), shallow: true do
-      member do
-        put 'toggle'
+  scope except: %i(new edit), shallow: true do
+    resources :projects do
+      resources :tasks do
+        member do
+          put 'sort'
+          put 'toggle'
+        end
+
+        resources :comments do
+          resources :attachments
+        end
       end
-
-      resources :comments, except: %i(new edit), shallow: true
     end
   end
+
+  mount_devise_token_auth_for 'User', at: 'auth', controllers: {
+    omniauth_callbacks: 'auth/omniauth_callbacks',
+  }
+
+  match '*unmatched_route.json', to: 'application#raise_not_found!', via: :all
 end

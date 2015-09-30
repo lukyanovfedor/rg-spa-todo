@@ -26,27 +26,89 @@
 }
 
 .files-upload {
-  height: 40px;
+  height: 65px;
 
   .drop-area {
     position: relative;
-    background: red;
+    background: #c2c3c0;
+    border: 2px dashed #3a3b38;
     height: 100%;
     z-index: 5;
+    text-align:center;
+    cursor: pointer;
+
+    span {
+      font-size: 16px;
+      color: #3a3b38;
+      position: relative;
+      top: 20px;
+    }
   }
 
   &.dragover {
     .drop-area {
-      background: black;
+      border: 2px solid #3a3b38;
     }
   }
 
   input {
     opacity: 0;
-    position: relative;
     z-index: 1;
     position: absolute;
     top: 0;
     left: 0;
+  }
+}
+
+.notifications-list {
+  position: fixed;
+  right: -15px;
+  top: 50px;
+  padding: 15px 30px 15px 15px;
+  width: 265px;
+  height: 100%;
+
+
+  .ng-enter {
+    margin-left: 100%;
+  }
+
+  .ng-enter-active {
+    margin-left: 0;
+  }
+
+  .ng-leave {
+    margin-left: 0;
+  }
+
+  .ng-leave-active {
+    margin-left: 100%;
+  }
+
+  .notification {
+    padding: 8px 12px;
+    margin-bottom: 15px;
+    background: #9a8e63;
+    cursor: pointer;
+    color: #fff;
+    width: 220px;
+    transition: 0.5s;
+
+    .title {
+      font-size: 13px;
+      margin: 0 0 3px;
+    }
+
+    .text {
+      font-size: 12px;
+    }
+
+    &.error {
+      background: #e74c3c;
+    }
+
+    &.success {
+      background: #22b016;
+    }
   }
 }

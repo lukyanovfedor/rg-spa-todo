@@ -1,35 +1,27 @@
 class ProjectsController < ApplicationController
-
   load_and_authorize_resource through: :current_user
 
   def index
   end
 
   def create
-    if @project.save
-    else
-    end
+    @project.save!
   end
 
   def update
-    if @project.update(project_params)
-    else
-    end
+    @project.update!(project_params)
   end
 
   def show
   end
 
   def destroy
-    if @project.destroy
-    else
-    end
+    @project.destroy!
   end
 
   private
 
-    def project_params
-      params.require(:project).permit(:title)
-    end
-
+  def project_params
+    params.require(:project).permit(:title)
+  end
 end

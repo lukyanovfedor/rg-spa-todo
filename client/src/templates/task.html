@@ -1,0 +1,94 @@
+<div class="dashboard">
+    <div class="back-button-wrap">
+        <div class="back-button" ui-sref="taskboard.projects">
+            back to projects
+        </div>
+    </div>
+
+    <div class="main task-card card">
+        <div class="not-edit" ng-if="!taskCtrl.task.isEdit">
+            <div class="title">{{ taskCtrl.task.title }}</div>
+
+            <span ng-click="taskCtrl.edit()" class="edit-button">
+                <i class="fa fa-pencil-square-o"></i>
+            </span>
+        </div>
+
+        <div class="edit" ng-if="taskCtrl.task.isEdit">
+            <edit-mode model="taskCtrl.task" destroy-cb="taskCtrl.destroyCb" update-cb="taskCtrl.updateCb">
+            </edit-mode>
+        </div>
+    </div>
+
+    <div ng-controller="CommentsController as commentsCtrl">
+        <div class="comments card">
+            <div class="comment" ng-repeat="comment in commentsCtrl.comments" ng-if="!comment.isEdit">
+                <div class="comment-created">
+                    <i class="fa fa-clock-o"></i> {{ commentsCtrl.formatUpdated(comment) }}
+                </div>
+
+                <div class="comment-note">
+                    {{ comment.note }}
+                </div>
+
+                <div class="controls">
+                    <span class="edit-comment" ng-click="commentsCtrl.edit(comment)">
+                        <i class="fa fa-pencil"></i>
+                    </span>
+
+                    <span class="destroy-comment" ng-click="commentsCtrl.destroy(comment)">
+                        <i class="fa fa-times"></i>
+                    </span>
+                </div>
+
+                <div class="comment-attachments">
+                    <div class="attachment" ng-repeat="a in comment.attachments">
+                        <a href="{{ a.file.url }}" target="_blank">{{a.file.name}}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card add-comment">
+            <form novalidate name="commentsCtrl.form" ng-submit="commentsCtrl.submit(taskCtrl.task)">
+                <div files-upload="commentsCtrl.newComment.attachments"></div>
+
+                <ul class="uploaded-attachments list-unstyled">
+                    <li ng-repeat="a in commentsCtrl.newComment.attachments">
+                        <a ng-if="a.id" href="{{ a.file.url }}" target="_blank">
+                            {{a.file.name}}
+                        </a>
+
+                        <span ng-if="!a.id">
+                            {{ a.name }}
+                        </span>
+
+                        <span class="remove-attachment" ng-click="commentsCtrl.removeAttachment(a)">
+                            <i class="fa fa-trash-o"></i>
+                        </span>
+                    </li>
+                </ul>
+
+                <div class="form-group" has-errors="note">
+                    <label>Comment</label>
+
+                    <textarea class="form-control" ng-model="commentsCtrl.newComment.note" name="note" required></textarea>
+
+                    <ng-messages ng-if="commentsCtrl.form.$submitted || commentsCtrl.form.note.$dirty" for="commentsCtrl.form.note.$error">
+                        <p ng-message="required" class="help-block">
+                            Note is required
+                        </p>
+                    </ng-messages>
+                </div>
+
+                <button class="btn btn-primary" type="submit">
+                    {{ commentsCtrl.newComment.id ? 'Edit comment' : 'Add comment' }}
+                </button>
+
+                <a ng-if="commentsCtrl.newComment.id" ng-click="commentsCtrl.cancel()" class="btn btn-warning">
+                    Cancel
+                </a>
+            </form>
+        </div>
+    </div>
+</div>
