@@ -8,6 +8,6 @@ class ApplicationError < StandardError
     @details = self.class::DETAILS[code] if code
     @status = self.class::STATUS
     @messages = []
-    @original = null
+    @original = nil
   end
 end
