@@ -16,7 +16,7 @@ before_script:
 script:
   - RAILS_ENV=test bundle exec rake db:migrate
   - bundle exec rspec
-  - client/.node_modules/karma/bin/karma start
+  - ./client/.node_modules/karma/bin/karma start
 addons:
   code_climate:
     repo_token: 4effe7c856558584862da5cec7ba918347be5f76834011cc96bf46d044aa0ca2
