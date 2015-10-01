@@ -24,46 +24,39 @@ class ApplicationController < ActionController::Base
   end
 
   def handle_unexpected(ex)
-    @exception = InternalServerError.new(:unexpected)
-    @exception.set_backtrace ex.backtrace
-    handle_exception
+    handle_exception(InternalServerError.new(:unexpected), ex)
   end
 
   def handle_forbidden(ex)
-    @exception = ForbiddenError.new(:not_allowed)
-    @exception.set_backtrace ex.backtrace
-    handle_exception
+    handle_exception(ForbiddenError.new(:not_allowed), ex)
   end
 
   def handle_invalid_record(ex)
-    @exception = BadRequestError.new(:invalid_input_data, ex.record)
-    @exception.set_backtrace ex.backtrace
-    handle_exception
+    handle_exception(BadRequestError.new(:invalid_input_data, ex.record), ex)
   end
 
   def handle_not_found(ex)
-    @exception = NotFoundError.new(:not_found)
-    @exception.set_backtrace ex.backtrace
-    handle_exception
+    handle_exception(NotFoundError.new(:not_found), ex)
   end
 
   def handle_aasm(ex)
-    @exception = BadRequestError.from_state_machine(ex)
-    @exception.set_backtrace ex.backtrace
-    handle_exception
+    handle_exception(BadRequestError.from_state_machine(ex), ex)
   end
 
-  def handle_exception
+  def handle_exception(new, old)
+    @exception = new
+    @exception.set_backtrace old.backtrace
+    @exception.original = old
+
     log_exception
     render_exception
   end
 
   def log_exception
-    Rails.logger.error
+    Rails.logger.error("#{@exception.original.message}")
     Rails.logger.error("#{@exception.status} #{@exception.code} #{@exception.title}")
     Rails.logger.error(@exception.details)
     @exception.backtrace.each { |l| Rails.logger.error(l) }
-    Rails.logger.error
   end
 
   def render_exception

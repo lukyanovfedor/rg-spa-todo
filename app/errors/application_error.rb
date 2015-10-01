@@ -1,5 +1,6 @@
 class ApplicationError < StandardError
   attr_reader :status, :code, :details, :title, :messages
+  attr_accessor :original
 
   def initialize(code = nil)
     @title = self.class.to_s
@@ -7,5 +8,6 @@ class ApplicationError < StandardError
     @details = self.class::DETAILS[code] if code
     @status = self.class::STATUS
     @messages = []
+    @original = null
   end
 end
