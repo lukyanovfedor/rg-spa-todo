@@ -51,8 +51,8 @@ describe 'CommentsController', () ->
       expect($scope.commentsCtrl.formatUpdated).to.be.an.instanceof(Function)
 
     it 'expect to return date in format "h:mma MMMM Do YYYY"', () ->
-      comment = { updated_at: '2015-09-28T17:46:21.196Z' }
-      expect($scope.commentsCtrl.formatUpdated(comment)).to.equal('8:46pm September 28th 2015')
+      comment = { updated_at: '2015-09-28 17:46:21' }
+      expect($scope.commentsCtrl.formatUpdated(comment)).to.equal('5:46pm September 28th 2015')
 
   describe '.edit', () ->
     it 'expect to assign edit function', () ->
