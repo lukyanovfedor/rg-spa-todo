@@ -95,162 +95,6 @@
 
 (function() {
   'use strict';
-  var AttachmentResourceFactory;
-
-  AttachmentResourceFactory = function($resource) {
-    return $resource('/attachments/:id.json', {
-      id: '@id'
-    });
-  };
-
-  angular.module('TodoApp').factory('AttachmentResource', ['$resource', AttachmentResourceFactory]);
-
-}).call(this);
-
-(function() {
-  'use strict';
-  var CommentResourceFactory;
-
-  CommentResourceFactory = function($resource) {
-    var cleanResourceAttributes, createFormData;
-    cleanResourceAttributes = function(data) {
-      var cleanData, key, pattern, value;
-      cleanData = {};
-      pattern = /^\$.+|toJSON$/;
-      for (key in data) {
-        value = data[key];
-        if (!pattern.test(key)) {
-          cleanData[key] = data[key];
-        }
-      }
-      return cleanData;
-    };
-    createFormData = function(data) {
-      var formData, key, name, value;
-      formData = new FormData();
-      for (key in data) {
-        value = data[key];
-        if (key === 'attachments') {
-          name = 'comment[attachments_attributes][][file]';
-          data.attachments.forEach(function(file) {
-            if (file instanceof File) {
-              return formData.append(name, file, file.name);
-            }
-          });
-        } else {
-          formData.append("comment[" + key + "]", value);
-        }
-      }
-      return formData;
-    };
-    return $resource('/comments/:id.json', {
-      id: '@id'
-    }, {
-      update: {
-        method: 'PUT',
-        headers: {
-          'Content-Type': void 0
-        },
-        transformRequest: [cleanResourceAttributes, createFormData]
-      },
-      query: {
-        url: '/tasks/:taskId/comments.json',
-        isArray: true,
-        params: {
-          taskId: '@task_id'
-        }
-      },
-      create: {
-        url: '/tasks/:taskId/comments.json',
-        method: 'POST',
-        params: {
-          taskId: '@task_id'
-        },
-        headers: {
-          'Content-Type': void 0
-        },
-        transformRequest: [cleanResourceAttributes, createFormData]
-      }
-    });
-  };
-
-  angular.module('TodoApp').factory('CommentResource', ['$resource', CommentResourceFactory]);
-
-}).call(this);
-
-(function() {
-  'use strict';
-  var ProjectResourceFactory;
-
-  ProjectResourceFactory = function($resource) {
-    return $resource('/projects/:id.json', {
-      id: '@id'
-    }, {
-      update: {
-        method: 'PUT'
-      }
-    });
-  };
-
-  angular.module('TodoApp').factory('ProjectResource', ['$resource', ProjectResourceFactory]);
-
-}).call(this);
-
-(function() {
-  'use strict';
-  var TaskResourceFactory;
-
-  TaskResourceFactory = function($resource) {
-    var convertDeadlineFormat;
-    convertDeadlineFormat = function(data) {
-      if (data.deadline) {
-        data.deadline = moment(data.deadline).format('DD-MM-YYYY');
-      }
-      return angular.toJson(data);
-    };
-    return $resource('/tasks/:id/:action.json', {
-      id: '@id'
-    }, {
-      update: {
-        method: 'PUT',
-        transformRequest: [convertDeadlineFormat]
-      },
-      toggle: {
-        method: 'PUT',
-        params: {
-          action: 'toggle'
-        }
-      },
-      sort: {
-        method: 'PUT',
-        params: {
-          action: 'sort'
-        }
-      },
-      query: {
-        url: '/projects/:projectId/tasks.json',
-        isArray: true,
-        params: {
-          projectId: '@project_id'
-        }
-      },
-      create: {
-        url: '/projects/:projectId/tasks.json',
-        method: 'POST',
-        params: {
-          projectId: '@project_id'
-        },
-        transformRequest: [convertDeadlineFormat]
-      }
-    });
-  };
-
-  angular.module('TodoApp').factory('TaskResource', ['$resource', TaskResourceFactory]);
-
-}).call(this);
-
-(function() {
-  'use strict';
   var AuthController;
 
   AuthController = (function() {
@@ -645,6 +489,390 @@
 
 (function() {
   'use strict';
+  var AppPreloadDirective;
+
+  AppPreloadDirective = function($animate, $timeout) {
+    var link;
+    link = function(scope, el, attrs) {
+      var removePreloader;
+      removePreloader = function() {
+        return $animate.leave(el.children()).then(function() {
+          el.remove();
+          return scope = el = attrs = null;
+        });
+      };
+      return $timeout(removePreloader, 0);
+    };
+    return {
+      restrict: 'A',
+      link: link
+    };
+  };
+
+  angular.module('TodoApp').directive('appPreload', ['$animate', '$timeout', AppPreloadDirective]);
+
+}).call(this);
+
+(function() {
+  'use strict';
+  var EditModeDirective;
+
+  EditModeDirective = function() {
+    var ctrl, lastScope, link;
+    lastScope = null;
+    ctrl = function($scope) {
+      $scope.hasDeadline = $scope.model.hasOwnProperty('deadline');
+      $scope.original = {
+        title: $scope.model.title,
+        deadline: $scope.model.deadline
+      };
+      $scope.needToUpdate = function() {
+        var deadlineChanged, titleChanged;
+        titleChanged = $scope.model.title !== $scope.original.title;
+        deadlineChanged = $scope.model.deadline !== $scope.original.deadline;
+        return titleChanged || deadlineChanged;
+      };
+      $scope.cancel = function(setOldValues) {
+        if (setOldValues == null) {
+          setOldValues = true;
+        }
+        if (setOldValues) {
+          $scope.model.title = $scope.original.title;
+          if ($scope.hasDeadline) {
+            $scope.model.deadline = $scope.original.deadline;
+          }
+        }
+        lastScope = null;
+        return $scope.model.isEdit = false;
+      };
+      $scope.update = function(form) {
+        if (form.$invalid) {
+          return;
+        }
+        if (!$scope.needToUpdate()) {
+          return $scope.cancel();
+        }
+        return $scope.model.$update().then((function(_this) {
+          return function() {
+            $scope.cancel(false);
+            if ($scope.updateCb) {
+              return $scope.updateCb($scope.model);
+            }
+          };
+        })(this));
+      };
+      return $scope.destroy = function() {
+        return $scope.model.$delete().then((function(_this) {
+          return function() {
+            $scope.cancel();
+            if ($scope.destroyCb) {
+              return $scope.destroyCb($scope.model);
+            }
+          };
+        })(this));
+      };
+    };
+    link = function(scope, el) {
+      var keyUpHandler;
+      keyUpHandler = function(event) {
+        if (event.keyCode && event.keyCode === 27) {
+          return scope.$apply(scope.cancel);
+        }
+      };
+      if (lastScope) {
+        lastScope.cancel();
+      }
+      lastScope = scope;
+      el[0].querySelector('input').focus();
+      document.addEventListener('keyup', keyUpHandler);
+      return scope.$on('$destroy', function() {
+        return document.removeEventListener('keyup', keyUpHandler);
+      });
+    };
+    return {
+      restrict: 'E',
+      templateUrl: 'templates/directives/edit_mode.html',
+      replace: true,
+      scope: {
+        model: '=',
+        destroyCb: '=',
+        updateCb: '='
+      },
+      controller: ['$scope', ctrl],
+      link: link
+    };
+  };
+
+  angular.module('TodoApp').directive('editMode', [EditModeDirective]);
+
+}).call(this);
+
+(function() {
+  'use strict';
+  var FilesUploadDirective;
+
+  FilesUploadDirective = function() {
+    var ctrl, link;
+    ctrl = function($scope) {
+      return $scope.addFiles = function(files) {
+        var file, i, len, results;
+        results = [];
+        for (i = 0, len = files.length; i < len; i++) {
+          file = files[i];
+          results.push($scope.files.push(file));
+        }
+        return results;
+      };
+    };
+    link = function(scope, el) {
+      var drop, input;
+      drop = el.find('div');
+      input = el.find('input');
+      drop.on('dragover', function(ev) {
+        ev.preventDefault();
+        ev.stopPropagation();
+        return el.addClass('dragover');
+      });
+      drop.on('dragleave', function(ev) {
+        ev.preventDefault();
+        ev.stopPropagation();
+        return el.removeClass('dragover');
+      });
+      drop.on('drop', function(ev, hh) {
+        var dataTransfer, files;
+        ev.preventDefault();
+        ev.stopPropagation();
+        el.removeClass('dragover');
+        dataTransfer = ev.dataTransfer ? ev.dataTransfer : ev.originalEvent.dataTransfer;
+        files = dataTransfer.files;
+        return scope.$apply(function() {
+          return scope.addFiles(files);
+        });
+      });
+      drop.on('click', function(ev) {
+        return input[0].click();
+      });
+      return input.on('change', function(ev) {
+        var files;
+        ev.preventDefault();
+        ev.stopPropagation();
+        files = ev.target.files;
+        return scope.$apply(function() {
+          return scope.addFiles(files);
+        });
+      });
+    };
+    return {
+      restrict: 'A',
+      replace: true,
+      scope: {
+        files: '=filesUpload'
+      },
+      templateUrl: 'templates/directives/files_upload.html',
+      controller: ['$scope', ctrl],
+      link: link
+    };
+  };
+
+  angular.module('TodoApp').directive('filesUpload', [FilesUploadDirective]);
+
+}).call(this);
+
+(function() {
+  'use strict';
+  var HasErrorsDirective;
+
+  HasErrorsDirective = function() {
+    var link;
+    link = function(scope, el, attrs, form) {
+      var handler, removeWatch, watchValue;
+      watchValue = function() {
+        return form[scope.field].$invalid && (form[scope.field].$dirty || form.$submitted);
+      };
+      handler = function(newValue) {
+        if (newValue) {
+          return el.addClass('has-error');
+        } else {
+          return el.removeClass('has-error');
+        }
+      };
+      removeWatch = scope.$watch(watchValue, handler);
+      return scope.$on('$destroy', function() {
+        return removeWatch();
+      });
+    };
+    return {
+      restrict: 'A',
+      link: link,
+      require: '^form',
+      scope: {
+        field: '@hasErrors'
+      }
+    };
+  };
+
+  angular.module('TodoApp').directive('hasErrors', [HasErrorsDirective]);
+
+}).call(this);
+
+(function() {
+  'use strict';
+  var AttachmentResourceFactory;
+
+  AttachmentResourceFactory = function($resource) {
+    return $resource('/attachments/:id.json', {
+      id: '@id'
+    });
+  };
+
+  angular.module('TodoApp').factory('AttachmentResource', ['$resource', AttachmentResourceFactory]);
+
+}).call(this);
+
+(function() {
+  'use strict';
+  var CommentResourceFactory;
+
+  CommentResourceFactory = function($resource) {
+    var cleanResourceAttributes, createFormData;
+    cleanResourceAttributes = function(data) {
+      var cleanData, key, pattern, value;
+      cleanData = {};
+      pattern = /^\$.+|toJSON$/;
+      for (key in data) {
+        value = data[key];
+        if (!pattern.test(key)) {
+          cleanData[key] = data[key];
+        }
+      }
+      return cleanData;
+    };
+    createFormData = function(data) {
+      var formData, key, name, value;
+      formData = new FormData();
+      for (key in data) {
+        value = data[key];
+        if (key === 'attachments') {
+          name = 'comment[attachments_attributes][][file]';
+          data.attachments.forEach(function(file) {
+            if (file instanceof File) {
+              return formData.append(name, file, file.name);
+            }
+          });
+        } else {
+          formData.append("comment[" + key + "]", value);
+        }
+      }
+      return formData;
+    };
+    return $resource('/comments/:id.json', {
+      id: '@id'
+    }, {
+      update: {
+        method: 'PUT',
+        headers: {
+          'Content-Type': void 0
+        },
+        transformRequest: [cleanResourceAttributes, createFormData]
+      },
+      query: {
+        url: '/tasks/:taskId/comments.json',
+        isArray: true,
+        params: {
+          taskId: '@task_id'
+        }
+      },
+      create: {
+        url: '/tasks/:taskId/comments.json',
+        method: 'POST',
+        params: {
+          taskId: '@task_id'
+        },
+        headers: {
+          'Content-Type': void 0
+        },
+        transformRequest: [cleanResourceAttributes, createFormData]
+      }
+    });
+  };
+
+  angular.module('TodoApp').factory('CommentResource', ['$resource', CommentResourceFactory]);
+
+}).call(this);
+
+(function() {
+  'use strict';
+  var ProjectResourceFactory;
+
+  ProjectResourceFactory = function($resource) {
+    return $resource('/projects/:id.json', {
+      id: '@id'
+    }, {
+      update: {
+        method: 'PUT'
+      }
+    });
+  };
+
+  angular.module('TodoApp').factory('ProjectResource', ['$resource', ProjectResourceFactory]);
+
+}).call(this);
+
+(function() {
+  'use strict';
+  var TaskResourceFactory;
+
+  TaskResourceFactory = function($resource) {
+    var convertDeadlineFormat;
+    convertDeadlineFormat = function(data) {
+      if (data.deadline) {
+        data.deadline = moment(data.deadline).format('DD-MM-YYYY');
+      }
+      return angular.toJson(data);
+    };
+    return $resource('/tasks/:id/:action.json', {
+      id: '@id'
+    }, {
+      update: {
+        method: 'PUT',
+        transformRequest: [convertDeadlineFormat]
+      },
+      toggle: {
+        method: 'PUT',
+        params: {
+          action: 'toggle'
+        }
+      },
+      sort: {
+        method: 'PUT',
+        params: {
+          action: 'sort'
+        }
+      },
+      query: {
+        url: '/projects/:projectId/tasks.json',
+        isArray: true,
+        params: {
+          projectId: '@project_id'
+        }
+      },
+      create: {
+        url: '/projects/:projectId/tasks.json',
+        method: 'POST',
+        params: {
+          projectId: '@project_id'
+        },
+        transformRequest: [convertDeadlineFormat]
+      }
+    });
+  };
+
+  angular.module('TodoApp').factory('TaskResource', ['$resource', TaskResourceFactory]);
+
+}).call(this);
+
+(function() {
+  'use strict';
   var CommentsFactory;
 
   CommentsFactory = function($q) {
@@ -945,234 +1173,6 @@
   };
 
   angular.module('TodoApp').factory('Template', [TemplateFactory]);
-
-}).call(this);
-
-(function() {
-  'use strict';
-  var AppPreloadDirective;
-
-  AppPreloadDirective = function($animate, $timeout) {
-    var link;
-    link = function(scope, el, attrs) {
-      var removePreloader;
-      removePreloader = function() {
-        return $animate.leave(el.children()).then(function() {
-          el.remove();
-          return scope = el = attrs = null;
-        });
-      };
-      return $timeout(removePreloader, 0);
-    };
-    return {
-      restrict: 'A',
-      link: link
-    };
-  };
-
-  angular.module('TodoApp').directive('appPreload', ['$animate', '$timeout', AppPreloadDirective]);
-
-}).call(this);
-
-(function() {
-  'use strict';
-  var EditModeDirective;
-
-  EditModeDirective = function() {
-    var ctrl, lastScope, link;
-    lastScope = null;
-    ctrl = function($scope) {
-      $scope.hasDeadline = $scope.model.hasOwnProperty('deadline');
-      $scope.original = {
-        title: $scope.model.title,
-        deadline: $scope.model.deadline
-      };
-      $scope.needToUpdate = function() {
-        var deadlineChanged, titleChanged;
-        titleChanged = $scope.model.title !== $scope.original.title;
-        deadlineChanged = $scope.model.deadline !== $scope.original.deadline;
-        return titleChanged || deadlineChanged;
-      };
-      $scope.cancel = function(setOldValues) {
-        if (setOldValues == null) {
-          setOldValues = true;
-        }
-        if (setOldValues) {
-          $scope.model.title = $scope.original.title;
-          if ($scope.hasDeadline) {
-            $scope.model.deadline = $scope.original.deadline;
-          }
-        }
-        lastScope = null;
-        return $scope.model.isEdit = false;
-      };
-      $scope.update = function(form) {
-        if (form.$invalid) {
-          return;
-        }
-        if (!$scope.needToUpdate()) {
-          return $scope.cancel();
-        }
-        return $scope.model.$update().then((function(_this) {
-          return function() {
-            $scope.cancel(false);
-            if ($scope.updateCb) {
-              return $scope.updateCb($scope.model);
-            }
-          };
-        })(this));
-      };
-      return $scope.destroy = function() {
-        return $scope.model.$delete().then((function(_this) {
-          return function() {
-            $scope.cancel();
-            if ($scope.destroyCb) {
-              return $scope.destroyCb($scope.model);
-            }
-          };
-        })(this));
-      };
-    };
-    link = function(scope, el) {
-      var keyUpHandler;
-      keyUpHandler = function(event) {
-        if (event.keyCode && event.keyCode === 27) {
-          return scope.$apply(scope.cancel);
-        }
-      };
-      if (lastScope) {
-        lastScope.cancel();
-      }
-      lastScope = scope;
-      el[0].querySelector('input').focus();
-      document.addEventListener('keyup', keyUpHandler);
-      return scope.$on('$destroy', function() {
-        return document.removeEventListener('keyup', keyUpHandler);
-      });
-    };
-    return {
-      restrict: 'E',
-      templateUrl: 'templates/directives/edit_mode.html',
-      replace: true,
-      scope: {
-        model: '=',
-        destroyCb: '=',
-        updateCb: '='
-      },
-      controller: ['$scope', ctrl],
-      link: link
-    };
-  };
-
-  angular.module('TodoApp').directive('editMode', [EditModeDirective]);
-
-}).call(this);
-
-(function() {
-  'use strict';
-  var FilesUploadDirective;
-
-  FilesUploadDirective = function() {
-    var ctrl, link;
-    ctrl = function($scope) {
-      return $scope.addFiles = function(files) {
-        var file, i, len, results;
-        results = [];
-        for (i = 0, len = files.length; i < len; i++) {
-          file = files[i];
-          results.push($scope.files.push(file));
-        }
-        return results;
-      };
-    };
-    link = function(scope, el) {
-      var drop, input;
-      drop = el.find('div');
-      input = el.find('input');
-      drop.on('dragover', function(ev) {
-        ev.preventDefault();
-        ev.stopPropagation();
-        return el.addClass('dragover');
-      });
-      drop.on('dragleave', function(ev) {
-        ev.preventDefault();
-        ev.stopPropagation();
-        return el.removeClass('dragover');
-      });
-      drop.on('drop', function(ev, hh) {
-        var dataTransfer, files;
-        ev.preventDefault();
-        ev.stopPropagation();
-        el.removeClass('dragover');
-        dataTransfer = ev.dataTransfer ? ev.dataTransfer : ev.originalEvent.dataTransfer;
-        files = dataTransfer.files;
-        return scope.$apply(function() {
-          return scope.addFiles(files);
-        });
-      });
-      drop.on('click', function(ev) {
-        return input[0].click();
-      });
-      return input.on('change', function(ev) {
-        var files;
-        ev.preventDefault();
-        ev.stopPropagation();
-        files = ev.target.files;
-        return scope.$apply(function() {
-          return scope.addFiles(files);
-        });
-      });
-    };
-    return {
-      restrict: 'A',
-      replace: true,
-      scope: {
-        files: '=filesUpload'
-      },
-      templateUrl: 'templates/directives/files_upload.html',
-      controller: ['$scope', ctrl],
-      link: link
-    };
-  };
-
-  angular.module('TodoApp').directive('filesUpload', [FilesUploadDirective]);
-
-}).call(this);
-
-(function() {
-  'use strict';
-  var HasErrorsDirective;
-
-  HasErrorsDirective = function() {
-    var link;
-    link = function(scope, el, attrs, form) {
-      var handler, removeWatch, watchValue;
-      watchValue = function() {
-        return form[scope.field].$invalid && (form[scope.field].$dirty || form.$submitted);
-      };
-      handler = function(newValue) {
-        if (newValue) {
-          return el.addClass('has-error');
-        } else {
-          return el.removeClass('has-error');
-        }
-      };
-      removeWatch = scope.$watch(watchValue, handler);
-      return scope.$on('$destroy', function() {
-        return removeWatch();
-      });
-    };
-    return {
-      restrict: 'A',
-      link: link,
-      require: '^form',
-      scope: {
-        field: '@hasErrors'
-      }
-    };
-  };
-
-  angular.module('TodoApp').directive('hasErrors', [HasErrorsDirective]);
 
 }).call(this);
 

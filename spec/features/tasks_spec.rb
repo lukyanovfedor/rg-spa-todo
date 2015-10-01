@@ -41,6 +41,6 @@ RSpec.feature "Tasks", type: :feature, js: true do
       find('.edit-mode-destroy-button').trigger('click')
     end
 
-    expect(page).not_to have_content('Buy milk')
+    expect(page).to have_content('Task deleted.')
   end
 end
