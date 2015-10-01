@@ -8,12 +8,7 @@ class ApplicationController < ActionController::Base
     rescue_from CanCan::AccessDenied, with: :handle_forbidden
     rescue_from ActiveRecord::RecordInvalid, with: :handle_invalid_record
     rescue_from ActiveRecord::RecordNotFound, with: :handle_not_found
-    rescue_from ActionController::RoutingError, with: :handle_not_found
     rescue_from AASM::InvalidTransition, with: :handle_aasm
-  end
-
-  def raise_not_found!
-    raise ActionController::RoutingError.new("No route matches #{params[:unmatched_route]}")
   end
 
   private
