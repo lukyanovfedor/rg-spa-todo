@@ -32,7 +32,8 @@ RSpec.feature "Projects", type: :feature, js: true do
   end
 
   scenario 'An client can remove project' do
-    FactoryGirl.create(:project, user: user, title: 'Hello world')
+    Project.create(user: user, title: "Hi")
+    # FactoryGirl.create(:project, user: user, title: 'Hello world')
     sign_in_as(user)
 
     find('.edit-button').trigger('click')

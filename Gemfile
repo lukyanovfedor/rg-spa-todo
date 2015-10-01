@@ -30,7 +30,7 @@ group :development, :test do
 end
 
 group :test do
-  gem 'database_cleaner', github: 'DatabaseCleaner/database_cleaner', ref: 'b8edac6bd04fb89a267201fa8d47066d511fd9de'
+  gem 'database_cleaner'
   gem 'fuubar'
   gem 'codeclimate-test-reporter'
   gem 'poltergeist'
