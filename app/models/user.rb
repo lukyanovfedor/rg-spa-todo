@@ -1,5 +1,5 @@
 class User < ActiveRecord::Base
-  devise :database_authenticatable, :registerable, :rememberable, :omniauthable
+  devise :database_authenticatable, :registerable, :rememberable, :omniauthable, :validatable
 
   include DeviseTokenAuth::Concerns::User
 
