@@ -10,7 +10,7 @@ script:
 before_script:
   - psql -c 'create database todo_test' -U postgres
   - cd client
-  - npm install
+  - npm install chai karma karma-chai karma-coffee-preprocessor karma-mocha karma-phantomjs-launcher merge2 mocha phantomjs-polyfill simple-mock
   - cd ..
 addons:
   code_climate:

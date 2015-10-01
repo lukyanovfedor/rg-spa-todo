@@ -35,7 +35,6 @@ group :test do
   gem 'fuubar'
   gem 'codeclimate-test-reporter'
   gem 'poltergeist'
-  gem 'capybara-screenshot'
 end
 
 group :production do
