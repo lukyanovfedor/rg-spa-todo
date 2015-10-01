@@ -1,0 +1,17 @@
+language: ruby
+rvm:
+  - 2.2.3
+env:
+  - DB=postgresql
+script:
+  - RAILS_ENV=test bundle exec rake db:migrate
+  - bundle exec rspec
+  - client./node_modules/karma/bin/karma start
+before_script:
+  - psql -c 'create database todo_test' -U postgres
+  - cd client
+  - npm install
+  - cd ..
+addons:
+  code_climate:
+    repo_token: 4effe7c856558584862da5cec7ba918347be5f76834011cc96bf46d044aa0ca2
