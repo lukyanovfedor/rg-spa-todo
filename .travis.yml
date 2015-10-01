@@ -3,15 +3,20 @@ rvm:
   - 2.2.3
 env:
   - DB=postgresql
-script:
-  - RAILS_ENV=test bundle exec rake db:migrate
-  - bundle exec rspec
-  - client./node_modules/karma/bin/karma start
+before_install:
+  - sudo apt-get update
+  - sudo apt-get purge postgresql-9.1 postgresql-9.2 postgresql-9.3
+  - sudo apt-get install postgresql-client-common postgresql-9.4
+  - sudo service postgresql start
 before_script:
   - psql -c 'create database todo_test' -U postgres
   - cd client
   - npm install chai karma karma-chai karma-coffee-preprocessor karma-mocha karma-phantomjs-launcher merge2 mocha phantomjs-polyfill simple-mock
   - cd ..
+script:
+  - RAILS_ENV=test bundle exec rake db:migrate
+  - bundle exec rspec
+  - client./node_modules/karma/bin/karma start
 addons:
   code_climate:
     repo_token: 4effe7c856558584862da5cec7ba918347be5f76834011cc96bf46d044aa0ca2
