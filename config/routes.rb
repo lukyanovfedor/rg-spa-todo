@@ -19,5 +19,5 @@ Rails.application.routes.draw do
     end
   end
 
-  match '*unmatched_route.json', to: 'application#raise_not_found!', via: :all
+  # match '*unmatched_route.json', to: 'application#raise_not_found!', via: :all
 end
