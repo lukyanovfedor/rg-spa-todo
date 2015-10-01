@@ -9,14 +9,17 @@ class CommentsController < ApplicationController
 
   def create
     @comment.save!
+    render :show
   end
 
   def update
     @comment.update!(comment_params)
+    render :show
   end
 
   def destroy
     @comment.destroy!
+    render :show
   end
 
   private

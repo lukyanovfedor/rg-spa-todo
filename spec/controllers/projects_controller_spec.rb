@@ -52,9 +52,9 @@ RSpec.describe ProjectsController, type: :controller do
           post :create, format: :json, project: project_prms
         end
 
-        it 'expect to render create template' do
+        it 'expect to render show template' do
           post :create, format: :json, project: project_prms
-          expect(response).to render_template('create')
+          expect(response).to render_template('show')
         end
       end
 
@@ -94,9 +94,9 @@ RSpec.describe ProjectsController, type: :controller do
           put :update, id: project.id.to_s, format: :json, project: project_prms
         end
 
-        it 'expect to render update template' do
+        it 'expect to render show template' do
           put :update, id: project.id.to_s, format: :json, project: project_prms
-          expect(response).to render_template('update')
+          expect(response).to render_template('show')
         end
       end
 
@@ -134,9 +134,9 @@ RSpec.describe ProjectsController, type: :controller do
         delete :destroy, id: project.id.to_s, format: :json
       end
 
-      it 'expect to render destroy template' do
+      it 'expect to render show template' do
         delete :destroy, id: project.id.to_s, format: :json
-        expect(response).to render_template('destroy')
+        expect(response).to render_template('show')
       end
     end
 

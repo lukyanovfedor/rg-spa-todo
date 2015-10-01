@@ -12,18 +12,22 @@ class TasksController < ApplicationController
 
   def create
     @task.save!
+    render :show
   end
 
   def update
     @task.update!(task_params)
+    render :show
   end
 
   def destroy
     @task.destroy!
+    render :show
   end
 
   def toggle
     @task.toggle!
+    render :show
   end
 
   private

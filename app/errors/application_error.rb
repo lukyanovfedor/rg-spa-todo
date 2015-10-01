@@ -1,5 +1,5 @@
 class ApplicationError < StandardError
-  attr_reader :status, :code, :details, :fields, :title, :messages
+  attr_reader :status, :code, :details, :title, :messages
 
   def initialize(code = nil)
     @title = self.class.to_s

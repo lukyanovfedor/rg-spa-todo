@@ -6,14 +6,17 @@ class ProjectsController < ApplicationController
 
   def create
     @project.save!
+    render :show
   end
 
   def update
     @project.update!(project_params)
+    render :show
   end
 
   def destroy
     @project.destroy!
+    render :show
   end
 
   private

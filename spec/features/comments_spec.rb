@@ -12,7 +12,7 @@ RSpec.feature "Comments", type: :feature, js: true do
     within '.add-comment' do
       fill_in 'note', with: 'This task is so cool!'
       attach_file('file', "#{Rails.root}/spec/fixtures/picasso.jpg")
-      click_button 'Add comment'
+      find('.comment-submit').trigger('click')
     end
 
     expect(page).to have_content('This task is so cool!')
@@ -38,7 +38,7 @@ RSpec.feature "Comments", type: :feature, js: true do
 
     within '.add-comment' do
       fill_in 'note', with: 'Bad comment!'
-      click_button 'Edit comment'
+      find('.comment-submit').trigger('click')
     end
 
     expect(page).to have_content('Bad comment!')

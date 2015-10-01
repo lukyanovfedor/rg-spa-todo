@@ -9,7 +9,7 @@ RSpec.feature "Tasks", type: :feature, js: true do
 
     within '.add-task' do
       fill_in 'title', with: 'Buy milk'
-      click_button 'Add new task'
+      find('.add-task-submit').trigger('click')
     end
 
     expect(page).to have_content('Buy milk')

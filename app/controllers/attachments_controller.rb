@@ -3,5 +3,6 @@ class AttachmentsController < ApplicationController
 
   def destroy
     @attachment.destroy!
+    render :show
   end
 end

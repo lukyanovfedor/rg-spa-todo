@@ -6,15 +6,14 @@ Rails.application.routes.draw do
   }
 
   scope except: %i(new edit), shallow: true do
-    resources :projects do
+    resources :projects, except: :show  do
       resources :tasks do
         member do
-          put 'sort'
           put 'toggle'
         end
 
-        resources :comments do
-          resources :attachments
+        resources :comments, except: :show do
+          resources :attachments, only: :destroy
         end
       end
     end

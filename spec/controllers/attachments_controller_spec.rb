@@ -32,7 +32,7 @@ RSpec.describe AttachmentsController, type: :controller do
 
       it 'expect to render destroy template' do
         delete :destroy, id: attachment.id.to_s, format: :json
-        expect(response).to render_template('destroy')
+        expect(response).to render_template('show')
       end
     end
 
