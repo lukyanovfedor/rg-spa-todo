@@ -5,7 +5,7 @@
 </div>
 
 <div class="modal-body">
-    <form role="form" name="modalCtrl.form" novalidate ng-submit="modalCtrl.submit()">
+    <form role="form" name="modalCtrl.form" novalidate ng-submit="modalCtrl.submit()" class="new-project-modal-form">
         <div class="form-group" has-errors="title">
             <label>Project title</label>
 
@@ -21,7 +21,7 @@
 </div>
 
 <div class="modal-footer">
-    <button class="btn btn-primary" type="button" ng-click="modalCtrl.submit()" ng-disabled="modalCtrl.form.$invalid">
+    <button class="btn btn-primary create-project-button" type="button" ng-click="modalCtrl.submit()" ng-disabled="modalCtrl.form.$invalid">
         Create
     </button>
 

@@ -13,19 +13,19 @@
 
                     <ul class="dropdown-menu dropdown-menu-right" role="menu">
                         <li>
-                            <a ui-sref="taskboard.projects">
+                            <a ui-sref="taskboard.projects" class="my-project-link">
                                 My projects
                             </a>
                         </li>
                         <li role="presentation" class="divider"></li>
                         <li>
-                            <a ng-click="headerCtrl.createProject()">
+                            <a ng-click="headerCtrl.createProject()" class="new-project-link">
                                 Create new project
                             </a>
                         </li>
                         <li role="presentation" class="divider"></li>
                         <li>
-                            <a ng-click="headerCtrl.signOut()">
+                            <a ng-click="headerCtrl.signOut()" class="sign-out-link">
                                 Sign out
                             </a>
                         </li>

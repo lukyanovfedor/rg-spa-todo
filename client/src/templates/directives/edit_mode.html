@@ -1,12 +1,12 @@
-<div>
-    <form role="form" name="form" ng-submit="update(this.form)" novalidate>
+<div class="edit-mode-directive">
+    <form role="form" name="form" ng-submit="update(this.form)" novalidate class="edit-mode-form">
         <div class="form-group" has-errors="title">
             <input type="text" name="title" ng-model="model.title" required class="form-control" />
         </div>
     </form>
 
     <div class="controls">
-        <span ng-click="update(this.form)">
+        <span ng-click="update(this.form)" class="edit-mode-update-button">
             <i class="fa fa-check"></i>
         </span>
 
@@ -23,7 +23,7 @@
             <i class="fa fa-times"></i>
         </span>
 
-        <span ng-click="destroy()">
+        <span ng-click="destroy()" class="edit-mode-destroy-button">
             <i class="fa fa-trash-o"></i>
         </span>
     </div>
