@@ -3,13 +3,13 @@ class ApplicationController < ActionController::Base
 
   before_action :configure_permitted_parameters, if: :devise_controller?
 
-  # unless Rails.application.config.consider_all_requests_local
+  unless Rails.application.config.consider_all_requests_local
     rescue_from Exception, with: :handle_unexpected
     rescue_from CanCan::AccessDenied, with: :handle_forbidden
     rescue_from ActiveRecord::RecordInvalid, with: :handle_invalid_record
     rescue_from ActiveRecord::RecordNotFound, with: :handle_not_found
     rescue_from AASM::InvalidTransition, with: :handle_aasm
-  # end
+  end
 
   private
 
