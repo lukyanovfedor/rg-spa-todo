@@ -10,7 +10,6 @@ gem 'uglifier', '>= 1.3.0'
 gem 'haml'
 gem 'coffee-rails', '~> 4.1.0'
 gem 'jbuilder', '~> 2.0'
-
 gem 'devise_token_auth'
 gem 'omniauth-facebook'
 gem 'cancancan'
